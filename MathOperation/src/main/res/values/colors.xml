@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- res/values/colors.xml -->
+<resources>
+    <color name="primary_color">#FF6347</color> <!-- Tomato Red -->
+    <color name="accent_color">#4CAF50</color> <!-- Green -->
+    <color name="dialog_background">#FFFFFF</color> <!-- White -->
+    <color name="error_color">#FF0000</color> <!-- Red for Errors -->
+</resources>

@@ -1,0 +1,24 @@
+<!-- res/values/styles.xml -->
+<resources>
+    <style name="CustomDialogTitle" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/primary_color</item>
+        <item name="android:textSize">20sp</item>
+        <!-- Removed the fontFamily -->
+    </style>
+
+    <style name="CustomDialogMessage" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textColor">@color/primary_color</item>
+        <!-- Removed the fontFamily -->
+    </style>
+
+    <style name="CustomDialogButton" parent="Widget.AppCompat.Button.Colored">
+        <item name="android:background">@color/accent_color</item>
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
+
+    <!-- Dialog Animation Style -->
+    <style name="DialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/fade_in</item>
+        <item name="android:windowExitAnimation">@anim/fade_out</item>
+    </style>
+</resources>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- res/drawable/loading_animation.xml -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:drawable="@drawable/spinner"
+        android:width="60dp"
+        android:height="60dp"/>
+</layer-list>
