@@ -1,5 +1,3 @@
-Sure! Here's the Markdown format you requested, with a Table of Contents and corresponding sections. I'll keep it in a bullet-point structure for the Table of Contents and ensure the headers are marked correctly for anchor links:
-
 
 ## Table of Contents
 - [Features](#features)
@@ -180,13 +178,4 @@ If you have questions or issues:
 
 - Open an issue on the [GitHub Issues page](https://github.com/Bravothe/payment-library/issues).
 - Contact support at support@evzoneafrica.com.
-```
 
-### Key Changes:
-1. The **Table of Contents** has been structured as a clickable list.
-2. The section headers (`## Features`, `## Prerequisites`, etc.) match the anchor links in the Table of Contents.
-3. The formatting follows a consistent structure with headings and code examples to ensure clarity.
-
-When rendered (on GitHub, for example), the links in the Table of Contents will navigate to the corresponding sections in the document.
-
-Let me know if this works!
