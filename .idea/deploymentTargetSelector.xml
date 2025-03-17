@@ -4,10 +4,10 @@
     <selectionStates>
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2025-03-15T09:38:56.983556307Z">
+        <DropdownSelection timestamp="2025-03-17T08:51:55.799963718Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="PhysicalDevice" identifier="serial=RF8W60H5WVA" />
+              <DeviceId pluginId="LocalEmulator" identifier="path=/home/bravo/.android/avd/Medium_Phone.avd" />
             </handle>
           </Target>
         </DropdownSelection>

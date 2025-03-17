@@ -1,5 +1,4 @@
 package com.example.mysamplelibrary
-
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
@@ -18,7 +17,7 @@ class MainActivity : AppCompatActivity() {
             val itemsPurchased = "1x Laptop, 2x Phone Chargers"
             val totalAmount = 5000.0
 
-            // Start the payment process using the library
+            // Start the payment process using
             MathOperation.startPayment(this, businessName, userName, itemsPurchased, totalAmount)
         }
     }

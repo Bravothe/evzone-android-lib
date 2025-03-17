@@ -2,17 +2,14 @@ package com.example.mathoperation
 
 import android.content.Context
 import android.graphics.Color
-import android.graphics.Typeface
 import android.os.Handler
 import android.os.Looper
-import android.text.SpannableString
-import android.text.Spanned
-import android.text.style.StyleSpan
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import com.bumptech.glide.Glide
+import kotlinx.coroutines.*
 
 object Dialogs {
 
@@ -22,6 +19,7 @@ object Dialogs {
         return headerLayout
     }
 
+    // Method to apply custom animations to the dialog
     private fun applyDialogAnimations(dialog: AlertDialog) {
         dialog.window?.setWindowAnimations(R.style.DialogAnimation)
     }
@@ -37,12 +35,13 @@ object Dialogs {
                 val logoImage = ImageView(context).apply {
                     Glide.with(context)
                         .load(R.drawable.evzone)  // Replace with your company logo
+                        .error(R.drawable.evzone)  // Fallback logo
                         .into(this)
                     layoutParams = LinearLayout.LayoutParams(200, 200)  // Adjust size as needed
                 }
                 addView(logoImage)
 
-                // Add the blinking company name (without other headers)
+                // Add the blinking company name
                 val companyNameText = TextView(context).apply {
                     text = "Evzone Pay"
                     textSize = 24f
@@ -57,10 +56,8 @@ object Dialogs {
                     override fun run() {
                         if (isGreen) {
                             companyNameText.setTextColor(Color.GREEN)
-                            companyNameText.text = "Evzone Pay"  // Reset text on each blink
                         } else {
                             companyNameText.setTextColor(Color.parseColor("#FFA500")) // Orange color
-                            companyNameText.text = "Evzone Pay"  // Reset text on each blink
                         }
                         isGreen = !isGreen
                         handler.postDelayed(this, 500) // Toggle the color every 500ms
@@ -73,16 +70,17 @@ object Dialogs {
             setCancelable(false)
         }.create()
 
-        // Apply fade-in/fade-out animations (if needed)
+        // Apply fade-in/fade-out animations
         applyDialogAnimations(loadingDialog)
 
         loadingDialog.show()
 
         // Simulate a delay before showing the next dialog
-        Handler(Looper.getMainLooper()).postDelayed({
-            onFinish()  // Transition to the next dialog after 2 seconds
-            loadingDialog.dismiss() // Dismiss loading dialog
-        }, 2000) // Delay of 2 seconds before showing the next dialog
+        CoroutineScope(Dispatchers.Main).launch {
+            delay(2000) // Delay of 2 seconds before showing the next dialog
+            onFinish()  // Transition to the next dialog
+            loadingDialog.dismiss()
+        }
     }
 
     // Method to show the summary dialog
@@ -120,99 +118,48 @@ object Dialogs {
         dialog.show()
     }
 
-    // Method to show passcode dialog
-    fun showPasscodeDialog(context: Context, amount: Double, onSubmit: (String) -> Unit) {
+    fun showPasscodeDialog(context: Context, amount: Int, attempts: Int, maxAttempts: Double, onSubmit: (String) -> Unit) {
         val inputPasscode = EditText(context).apply {
             hint = "Enter Passcode"
             inputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_PASSWORD
             gravity = Gravity.CENTER
-            setPadding(20, 20, 20, 20) // Reduced padding to make it more compact
-            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
-                weight = 1f  // Make the EditText expand to fill available space
-            }
+            setPadding(20, 20, 20, 20)
+            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+            isEnabled = attempts < maxAttempts // Disable input if max attempts reached
         }
 
-        // Create an ImageView for the eye icon (visible/hide)
-        val eyeIcon = ImageView(context).apply {
-            setImageResource(R.drawable.ic_eye_off) // Initially set the "eye off" icon (hidden)
-            layoutParams = LinearLayout.LayoutParams(48, 48).apply {  // Set a smaller size for the eye icon
-                marginStart = 16  // Add some margin on the left side of the icon
-                gravity = Gravity.CENTER_VERTICAL  // Center the icon vertically
-            }
-            setOnClickListener {
-                // Toggle the input type to show or hide the password
-                if (inputPasscode.inputType == android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_PASSWORD) {
-                    inputPasscode.inputType = android.text.InputType.TYPE_CLASS_NUMBER  // Show password
-                    setImageResource(R.drawable.ic_eye_on)  // Change to "eye on" icon (visible)
-                } else {
-                    inputPasscode.inputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_PASSWORD  // Hide password
-                    setImageResource(R.drawable.ic_eye_off)  // Change to "eye off" icon (hidden)
-                }
-                inputPasscode.setSelection(inputPasscode.text.length)  // Keep the cursor at the end after toggle
-            }
-        }
+        val attemptsMessage = TextView(context).apply {
+            textSize = 14f
+            setPadding(0, 10, 0, 10)
+            gravity = Gravity.CENTER
 
-        // Create a layout for the passcode input field and the eye icon
-        val inputLayout = LinearLayout(context).apply {
-            orientation = LinearLayout.HORIZONTAL
-            gravity = Gravity.CENTER_VERTICAL  // Align both the EditText and ImageView vertically
-            setPadding(20, 0, 20, 0)  // Reduce the padding for better fit
-            addView(inputPasscode)  // Add the passcode input field
-            addView(eyeIcon)  // Add the eye icon next to the EditText
+            if (attempts >= maxAttempts) {
+                text = "You are locked out! Try again later."
+                setTextColor(Color.RED)
+            } else {
+                val remaining = maxAttempts - attempts
+                text = "Wrong passcode. You have $remaining attempt(s) left."
+                setTextColor(Color.RED)
+            }
         }
 
         val layout = LinearLayout(context).apply {
             orientation = LinearLayout.VERTICAL
             setPadding(50, 20, 50, 10)
-
-            // Add the custom header at the top
-            addView(getDialogHeader(context))  // The header stays at the top
-
-            // Calculate VAT and Inclusive VAT based on the amount
-            val vat = amount * 0.01  // 1% VAT
-            val inclusiveVat = amount * 0.015  // 1.5% Inclusive VAT
-            val totalAmount = amount + vat + inclusiveVat  // Total amount to be deducted
-
-            // Create the message with calculated VAT and Inclusive VAT
-            val messageText = """
-        Amount to be deducted: UGX $amount
-        VAT (1.0%): UGX $vat
-        Inclusive VAT (1.5%): UGX $inclusiveVat
-        Total: UGX $totalAmount
-    """.trimIndent()
-
-            // Create a SpannableString to make the amount bold
-            val spannableMessage = SpannableString(messageText).apply {
-                val amountStartIndex = messageText.indexOf("$amount")
-                val amountEndIndex = amountStartIndex + "$amount".length
-
-                // Make the amount bold
-                setSpan(StyleSpan(Typeface.BOLD), amountStartIndex, amountEndIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-            }
-
-            // Add the payment confirmation message with dynamic values
-            val message = TextView(context).apply {
-                text = spannableMessage
-                gravity = Gravity.START  // Align text to the left for a clean, professional look
-                textSize = 16f
-                setPadding(0, 20, 0, 20)  // Add padding for better separation
-            }
-            addView(message)  // Add the message below the header
-
-            // Add the input layout with the passcode field and eye icon
-            addView(inputLayout)  // The passcode input field with icon
+            addView(getDialogHeader(context))  // Add header
+            addView(attemptsMessage)  // Show remaining attempts message
+            if (attempts < maxAttempts) addView(inputPasscode)  // Show input only if attempts < max
         }
 
-
         val dialog = AlertDialog.Builder(context)
-            .setView(layout)  // Set the custom layout
+            .setView(layout)
             .setPositiveButton("Submit") { dialog, _ ->
                 val passcode = inputPasscode.text.toString()
-                if (passcode.isNotEmpty()) {
+                if (passcode.isNotEmpty() && attempts < maxAttempts) {
                     onSubmit(passcode)  // Submit passcode
                     dialog.dismiss()
-                } else {
-                    Toast.makeText(context, "Passcode required!", Toast.LENGTH_SHORT).show()
+                } else if (attempts >= maxAttempts) {
+                    Toast.makeText(context, "You are locked out!", Toast.LENGTH_LONG).show()  // Only show after attempts are exceeded
                 }
             }
             .setNegativeButton("Cancel") { dialog, _ -> dialog.dismiss() }
@@ -220,12 +167,13 @@ object Dialogs {
             .create()
 
         applyDialogAnimations(dialog)
-
         dialog.show()
     }
 
+
+
     // Method to show payment status dialog
-    fun showPaymentStatus(context: Context, isSuccess: Boolean) {
+    fun showPaymentStatus(context: Context, isSuccess: Boolean, remainingAttempts: Int) {
         val dialogLayout = LinearLayout(context).apply {
             orientation = LinearLayout.VERTICAL
             gravity = Gravity.CENTER  // Center all elements horizontally
@@ -235,7 +183,7 @@ object Dialogs {
 
             // Add the detailed message below the header
             val detailedMessage = TextView(context).apply {
-                text = if (isSuccess) "Your payment was processed successfully!" else "Something went wrong. Try again."
+                text = if (isSuccess) "Your payment was processed successfully!" else "Wrong Passcode. Try again."
                 gravity = Gravity.CENTER
                 textSize = 16f
                 setPadding(0, 20, 0, 20)  // Padding to separate it from the header
@@ -260,7 +208,7 @@ object Dialogs {
             orientation = LinearLayout.VERTICAL
             addView(getDialogHeader(context))  // Add the custom header
             val insufficientBalanceMessage = TextView(context).apply {
-                text = "Your wallet balance is too low to complete this payment."
+                text = "Your wallet balance is too low to complete this payment. Thank You"
                 gravity = Gravity.CENTER
                 textSize = 16f
             }
