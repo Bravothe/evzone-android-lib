@@ -1,25 +1,5 @@
-To make the Table of Contents in your README fully navigable, you can ensure that the links within the Table of Contents match the proper heading IDs. Markdown automatically creates IDs for headings based on the text of the heading, but it does so in a specific way:
+Sure! Here's the Markdown format you requested, with a Table of Contents and corresponding sections. I'll keep it in a bullet-point structure for the Table of Contents and ensure the headers are marked correctly for anchor links:
 
-- It converts the text of each heading to lowercase.
-- It replaces spaces and special characters (except hyphens) with hyphens (`-`).
-
-For example, if you have a heading like:
-
-```markdown
-## Installation
-```
-
-It will create a link like this: `#installation`.
-
-### Updated Table of Contents with Links
-To ensure that the Table of Contents is navigable, here's your updated README with the correct anchor links.
-
-```markdown
-# Evzone Pay SDK
-
-![Evzone Pay Logo](https://github.com/Bravothe/payment-library/blob/main/src/assets/logo.jpg?raw=true)
-
-**Evzone Pay** is a Kotlin-based Android SDK designed to simplify the integration of the **Evzone Africa** digital wallet payment system into e-commerce mobile applications. With this SDK, developers can easily implement secure payment processing for their customers, enabling smooth and efficient financial transactions.
 
 ## Table of Contents
 - [Features](#features)
@@ -35,45 +15,49 @@ To ensure that the Table of Contents is navigable, here's your updated README wi
 - [Support](#support)
 
 ## Features
-- **Easy Integration**: Seamless integration with Android e-commerce apps.
-- **Secure Payments**: Payment processing using the Evzone Africa digital wallet.
-- **Customizable UI**: Tailor the payment UI components to suit your app's design.
-- **Comprehensive Error Handling**: Robust error management to ensure smooth user experience.
-- **Optimized for Performance**: Lightweight SDK designed for efficient resource usage on Android devices.
+
+- Easy integration with Android e-commerce apps.
+- Secure payment processing using the Evzone Africa digital wallet.
+- Customizable payment UI components.
+- Comprehensive error handling and validation.
+- Lightweight and optimized for performance on Android devices.
 
 ## Prerequisites
-Before integrating the Evzone Pay SDK, ensure the following requirements are met:
-- **Android Studio** (latest stable version recommended).
-- Minimum **SDK Version**: API 21 (Android 5.0 Lollipop).
-- A registered **Evzone Africa merchant account** to obtain necessary credentials (API keys).
-- **Kotlin 1.5+** configured in your project.
+
+Before integrating the Evzone Pay SDK, ensure you have the following:
+
+- Android Studio (latest stable version recommended).
+- Minimum SDK version: API 21 (Android 5.0 Lollipop).
+- A registered Evzone Africa merchant account to obtain necessary credentials (e.g., API keys).
+- Kotlin 1.5+ configured in your project.
 - Access to the private GitHub repository hosting the SDK (requires a JitPack auth token).
 
 ## Installation
 
-### Step 1: Add the SDK Dependency
-In your app-level `build.gradle`, add the Evzone Pay SDK dependency. Replace `TAG` with the desired release tag (e.g., `1.0.0`) or commit hash from the repository:
+### Step 1: Add the Dependency
 
-```gradle
+In your app-level `build.gradle`, add the Evzone Pay SDK dependency. Replace `TAG` with the specific release tag (e.g., `1.0.0`) or commit hash from the repository:
+
+```kotlin
 dependencies {
     implementation 'com.github.Bravothe:payment-library:TAG'
 }
-```
 
 ### Step 2: Configure JitPack Authentication
-Since the repository is private, you need to authenticate using a JitPack auth token. 
+
+Since the repository is private, you need to configure authentication using a JitPack auth token.
 
 #### Add the Token to `gradle.properties`
-Add your JitPack auth token to your `gradle.properties` (create the file if it doesn’t exist):
+
+Add your JitPack auth token to `gradle.properties` (create the file if it doesn’t exist):
 
 ```properties
 authToken=jp_jm7m9rr1gk98ej0s9fnn9nftd0
 ```
 
-Replace `jp_jm7m9rr1gk98ej0s9fnn9nftd0` with your actual JitPack auth token.
-
 #### Update `settings.gradle.kts`
-In your project-level `settings.gradle.kts`, configure the JitPack repository and pass the `authToken` as the username:
+
+In your project-level `settings.gradle.kts`, configure the JitPack repository to use the `authToken` as the username:
 
 ```kotlin
 dependencyResolutionManagement {
@@ -91,17 +75,14 @@ dependencyResolutionManagement {
 }
 ```
 
-### Step 3: (Optional) Approve JitPack Application on GitHub
-If this is your first time using JitPack with a private repository, ensure that JitPack is authorized to access your repository:
-1. Go to **GitHub Settings** > **Applications** > **Authorized OAuth Apps**.
-2. Confirm that JitPack has access to your private repositories.
+### Step 3: Sync Project
 
-### Step 4: Sync the Project
-Sync your project with the Gradle files to download the SDK. If you face authentication issues, verify that the `authToken` is correct and your repository is accessible.
+Sync your project with Gradle files to download the library. If you encounter authentication issues, verify your `authToken` and repository access.
 
 ## Usage
 
 ### Basic Integration
+
 To integrate Evzone Pay into your application, follow these steps:
 
 1. Initialize the SDK with your merchant credentials.
@@ -131,37 +112,35 @@ class MainActivity : AppCompatActivity() {
             val itemsPurchased = "1x Laptop, 2x Phone Chargers"
             val totalAmount = 5000.0
 
-            // Initiating the payment process
+            // Start the payment process
             EvzonePay.startPayment(this, businessName, username, itemsPurchased, totalAmount)
         }
     }
 }
 ```
 
-### Notes:
-- Replace `your_merchant_id` and `your_api_key` with the credentials provided by Evzone Africa.
-- The parameters `businessName`, `username`, `itemsPurchased`, and `totalAmount` are required for initiating each payment.
-- Ensure `totalAmount` is a valid `Double` representing the total amount of the items purchased.
-
 ## API Reference
 
 ### `EvzonePay` Class
+
 - **Constructor**:
   - `merchantId` (String, required): Your Evzone Africa merchant ID.
   - `apiKey` (String, required): Your Evzone Africa API key.
   - `context` (Context, required): The Android context (e.g., Activity).
 
 - **Methods**:
-  - `startPayment(businessName: String, username: String, itemsPurchased: String, totalAmount: Double, callback: PaymentResultCallback)`: Starts the payment UI and processes the payment with the provided details.
+  - `startPayment(businessName: String, username: String, itemsPurchased: String, totalAmount: Double, callback: PaymentResultCallback)`: Launches the payment UI and processes the payment with the provided details.
 
 ### `PaymentResultCallback` Interface
-- `onSuccess(transactionId: String)`: Triggered when the payment is successful, returning a unique transaction ID.
-- `onError(errorMessage: String)`: Triggered when an error occurs, providing an error message.
-- `onCancel()`: Triggered when the user cancels the payment.
+
+- `onSuccess(transactionId: String)`: Called when the payment is successful, returning a unique transaction ID.
+- `onError(errorMessage: String)`: Called when an error occurs, providing an error message.
+- `onCancel()`: Called when the user cancels the payment.
 
 ## Examples
 
-### Complete Checkout Flow:
+### Complete Checkout Flow
+
 1. User adds items to the cart.
 2. User clicks "Pay Now" to initiate the payment.
 3. The `startPayment` method is invoked with `businessName`, `username`, `itemsPurchased`, and `totalAmount`.
@@ -171,40 +150,43 @@ For more examples, refer to the [sample app](https://github.com/Bravothe/payment
 
 ## Configuration
 
-### Customization:
-The SDK allows for the following customizations:
-- **UI Customization**: Modify the payment UI by overriding layout resources (further details can be found in the sample app).
-- **Currency**: The SDK uses the default currency linked to your merchant account. For multi-currency support, please contact support.
+### UI Customization
+
+You can modify the UI components of the SDK by overriding the default layout resources. For further details, check out the [sample app](https://github.com/Bravothe/payment-library/tree/main/sample).
 
 ## Troubleshooting
 
-- **Authentication Failed**: Ensure the `authToken` in `gradle.properties` is correct and that JitPack has access to your private repository.
-- **Invalid Merchant ID or API Key**: Verify your credentials with Evzone Africa support.
-- **Payment UI Not Displaying**: Ensure the `context` passed to `EvzonePay` is valid and the necessary permissions (e.g., Internet) are granted.
-- **Missing Parameters**: Ensure that `businessName`, `username`, `itemsPurchased`, and `totalAmount` are provided and not null.
-- **Payment Not Processing**: Check your internet connection and ensure Evzone Africa’s servers are operational.
+- **Authentication Failed**: Ensure your `authToken` is correct in `gradle.properties`.
+- **Invalid Merchant ID**: Double-check your merchant credentials with Evzone Africa.
+- **Payment UI Not Displaying**: Ensure the `context` is valid, and proper permissions are granted.
 
 ## Contributing
-We welcome contributions to the Evzone Pay SDK. To contribute:
+
+To contribute to this project:
+
 1. Fork the repository.
 2. Create a new branch (`git checkout -b feature/your-feature`).
 3. Commit your changes (`git commit -m "Add your feature"`).
 4. Push to your branch (`git push origin feature/your-feature`).
 5. Open a Pull Request.
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for more details.
-
 ## License
+
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
 ## Support
-For questions or issues:
+
+If you have questions or issues:
+
 - Open an issue on the [GitHub Issues page](https://github.com/Bravothe/payment-library/issues).
 - Contact support at support@evzoneafrica.com.
 ```
 
-### Key Points:
-1. **Table of Contents**: I added the appropriate markdown anchors to ensure each section is linked to the corresponding heading. For example, `[Installation](#installation)` will jump to the `## Installation` section.
-2. **Anchor Matching**: The Table of Contents now contains links to the correct section headings (e.g., `#features`, `#prerequisites`, etc.). When users click on any link in the Table of Contents, they will be directed to that section of the document.
+### Key Changes:
+1. The **Table of Contents** has been structured as a clickable list.
+2. The section headers (`## Features`, `## Prerequisites`, etc.) match the anchor links in the Table of Contents.
+3. The formatting follows a consistent structure with headings and code examples to ensure clarity.
 
-This structure should now work perfectly for easy navigation through your README when viewed on GitHub or in any Markdown editor that supports Table of Contents links. Let me know if you need further assistance!
+When rendered (on GitHub, for example), the links in the Table of Contents will navigate to the corresponding sections in the document.
+
+Let me know if this works!
