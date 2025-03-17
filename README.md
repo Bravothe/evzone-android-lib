@@ -1,4 +1,5 @@
 
+<<<<<<< HEAD
 ## Table of Contents
 - [Features](#features)
 - [Prerequisites](#prerequisites)
@@ -179,3 +180,5 @@ If you have questions or issues:
 - Open an issue on the [GitHub Issues page](https://github.com/Bravothe/payment-library/issues).
 - Contact support at support@evzoneafrica.com.
 
+=======
+>>>>>>> 72b287693b0b4816f2e5ffc38f285616dd887e9c
