@@ -118,7 +118,22 @@ object Dialogs {
         dialog.show()
     }
 
-    fun showPasscodeDialog(context: Context, amount: Int, attempts: Int, maxAttempts: Double, onSubmit: (String) -> Unit) {
+    fun showPasscodeDialog(
+        context: Context,
+        amount: Int,
+        attempts: Int,
+        maxAttempts: Int,
+        onSubmit: (String) -> Unit
+    ) {
+        val serviceFeePercentage = 5.0  // Example service fee percentage
+        val vatPercentage = 15.0  // Example VAT percentage
+
+        // Calculate service fee and VAT
+        val serviceFee = amount * (serviceFeePercentage / 100)
+        val vat = amount * (vatPercentage / 100)
+
+        val totalAmount = amount + serviceFee + vat
+
         val inputPasscode = EditText(context).apply {
             hint = "Enter Passcode"
             inputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_VARIATION_PASSWORD
@@ -138,17 +153,34 @@ object Dialogs {
                 setTextColor(Color.RED)
             } else {
                 val remaining = maxAttempts - attempts
-                text = "Wrong passcode. You have $remaining attempt(s) left."
+                text = "You have $remaining attempt(s) left."
                 setTextColor(Color.RED)
             }
+        }
+
+        // Create the paragraph for the dialog message
+        val message = "A total of $$totalAmount will be deducted from your Evzone Pay Wallet, " +
+                "including Service Fee: $$serviceFee and VAT: $$vat. Enter the passcode to approve the Transaction."
+
+        val messageText = TextView(context).apply {
+            text = message
+            gravity = Gravity.CENTER
+            textSize = 16f
         }
 
         val layout = LinearLayout(context).apply {
             orientation = LinearLayout.VERTICAL
             setPadding(50, 20, 50, 10)
             addView(getDialogHeader(context))  // Add header
-            addView(attemptsMessage)  // Show remaining attempts message
-            if (attempts < maxAttempts) addView(inputPasscode)  // Show input only if attempts < max
+            addView(messageText)  // Show the formatted message
+
+            // Add the input passcode and attempts message conditionally
+            if (attempts < maxAttempts) {
+                addView(inputPasscode)  // Show input only if attempts < max
+                addView(attemptsMessage)  // Position attemptsMessage below passcode input
+            } else {
+                addView(attemptsMessage)  // Show locked-out message if attempts exceeded
+            }
         }
 
         val dialog = AlertDialog.Builder(context)
@@ -169,6 +201,7 @@ object Dialogs {
         applyDialogAnimations(dialog)
         dialog.show()
     }
+
 
 
 
@@ -212,6 +245,7 @@ object Dialogs {
                 gravity = Gravity.CENTER
                 textSize = 16f
             }
+
             addView(insufficientBalanceMessage)
         }
 

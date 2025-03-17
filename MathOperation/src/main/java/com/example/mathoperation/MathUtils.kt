@@ -30,11 +30,11 @@ object MathOperation {
 
     private fun showAmountDeductionDialog(context: Context, amount: Double) {
         Dialogs.showPasscodeDialog(context,
-            amount.toInt(), passcodeAttempts, MAX_ATTEMPTS.toDouble()
+            amount.toInt(), passcodeAttempts, MAX_ATTEMPTS
         ) { passcode ->
             if (isLockedOut) {
                 // Inform user they are locked out and prevent further attempts
-                Toast.makeText(context, "You are locked out! Please try again later.", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, "You are locked out! Please try after 30 minutes.", Toast.LENGTH_LONG).show()
             } else if (isPasscodeCorrect(passcode)) {
                 passcodeAttempts = 0  // Reset attempts on success
                 processPayment(context, amount)

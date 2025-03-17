@@ -30,7 +30,7 @@ object MathOperations {
     fun showPasscodeDialog(
         context: Context,
         amount: Int,
-        maxAttempts: Double,
+        maxAttempts: Int,
         onSubmit: (String) -> Unit
     ) {
         // Instead of passing the correct passcode around, use the global constant CORRECT_PASSCODE
