@@ -1,8 +1,3 @@
-# Evzone Pay
-
-<img src="https://github.com/Bravothe/payment-library/blob/main/src/assets/logo.jpg?raw=true" alt="Evzone Pay Logo" width="200" />
-
-**Evzone Africa** is a library designed to simplify the integration of a digital wallet payment system into e-commerce Android Mobile Platforms. Built with **Kotlin** and **XML**, it provides a seamless way for developers to enable their customers to make payments using the Evzone Africa digital wallet. This package is lightweight, customizable, and developer-friendly.
 
 ## Table of Contents
 - [Features](#features)
@@ -19,146 +14,168 @@
 
 ## Features
 
-- Easy integration with e-commerce Mobile platforms.
-- Support for React-base frontends.
-- Secure payment processing with Evzone Africa digital wallet.
-- Customizable payment form component.
+- Easy integration with Android e-commerce apps.
+- Secure payment processing using the Evzone Africa digital wallet.
+- Customizable payment UI components.
 - Comprehensive error handling and validation.
-- Lightweight and optimized for performance.
+- Lightweight and optimized for performance on Android devices.
 
 ## Prerequisites
 
-Before you begin, ensure you have the following installed:
-- [Node.js](https://nodejs.org/) (v16 or higher)
-- [npm](https://www.npmjs.com/) (v8 or higher) or [yarn](https://yarnpkg.com/)
-- A registered Evzone Africa merchant account (to obtain necessary credentials).
+Before integrating the Evzone Pay SDK, ensure you have the following:
+
+- Android Studio (latest stable version recommended).
+- Minimum SDK version: API 21 (Android 5.0 Lollipop).
+- A registered Evzone Africa merchant account to obtain necessary credentials (e.g., API keys).
+- Kotlin 1.5+ configured in your project.
+- Access to the private GitHub repository hosting the SDK (requires a JitPack auth token).
 
 ## Installation
-To install the `evzone-africa` library, run the following command in your project directory:
 
-```bash
+### Step 1: Add the Dependency
 
-npm install evzone-africa
+In your app-level `build.gradle`, add the Evzone Pay SDK dependency. Replace `TAG` with the specific release tag (e.g., `1.0.0`) or commit hash from the repository:
 
+```kotlin
+dependencies {
+    implementation 'com.github.Bravothe:payment-library:TAG'
+}
+
+### Step 2: Configure JitPack Authentication
+
+Since the repository is private, you need to configure authentication using a JitPack auth token.
+
+#### Add the Token to `gradle.properties`
+
+Add your JitPack auth token to `gradle.properties` (create the file if it doesn’t exist):
+
+```properties
+authToken=jp_jm7m9rr1gk98ej0s9fnn9nftd0
 ```
 
-Or, if you're using Yarn:
+#### Update `settings.gradle.kts`
 
-```bash
-yarn add evzone-africa
+In your project-level `settings.gradle.kts`, configure the JitPack repository to use the `authToken` as the username:
+
+```kotlin
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+        maven {
+            url = uri("https://jitpack.io")
+            credentials {
+                username = providers.gradleProperty("authToken").get()
+            }
+        }
+    }
+}
 ```
 
-Additionally, import the CSS file for styling the payment form:
+### Step 3: Sync Project
 
-```js
-import "evzone-africa13/dist/dist/WalletPaymentForm.css";
-```
+Sync your project with Gradle files to download the library. If you encounter authentication issues, verify your `authToken` and repository access.
 
 ## Usage
-### Frontend (React)
-1. Import the `WalletPaymentForm` component into your React application.
-2. Use it within a conditional render to show the payment form when needed.
-3. Pass the required props, such as `customerId`, `amount`, `onClose`, and `onSuccess`.
 
-Here’s an example usage in a shopping cart component:
+### Basic Integration
 
-```js
+To integrate Evzone Pay into your application, follow these steps:
 
+1. Initialize the SDK with your merchant credentials.
+2. Launch the payment process, passing the required parameters: `businessName`, `username`, `itemsPurchased`, and `totalAmount`.
+3. Handle the payment result using the provided callback.
 
-import React, { useState } from "react";
-import WalletPaymentForm from "evzone-africa13/dist/WalletPaymentForm.esm";
-import "evzone-africa13/dist/dist/WalletPaymentForm.css";
+Here is an example of how to initiate the payment process:
 
-const Cart = () => {
-  const [showPopup, setShowPopup] = useState(false);
-  const cartTotalAmount = 99.99; // Example amount (replace with your cart logic)
-  const customerId = "customer123"; // Example customer ID (replace with your auth logic)
+```kotlin
+package com.example.payment
 
-  const handlePaymentSuccess = () => {
-    console.log("Payment successful");
-    // Add logic to clear cart or update order status
-    setShowPopup(false);
-  };
+import android.os.Bundle
+import android.widget.Button
+import androidx.appcompat.app.AppCompatActivity
+import com.evzoneafrica.payment.EvzonePay
 
-  return (
-    <div className="cart-container">
-      <h2>Shopping Cart</h2>
-      <button onClick={() => setShowPopup(true)}>Make Payments</button>
-      {showPopup && (
-        <WalletPaymentForm
-          customerId={customerId}
-          amount={cartTotalAmount}
-          onClose={() => setShowPopup(false)}
-          onSuccess={handlePaymentSuccess}
-        />
-      )}
-    </div>
-  );
-};
+class MainActivity : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
 
-export default Cart;
+        val btnPay: Button = findViewById(R.id.btnPay)
 
+        btnPay.setOnClickListener {
+            val businessName = "Awesome Store"
+            val username = "John Doe"
+            val itemsPurchased = "1x Laptop, 2x Phone Chargers"
+            val totalAmount = 5000.0
 
+            // Start the payment process
+            EvzonePay.startPayment(this, businessName, username, itemsPurchased, totalAmount)
+        }
+    }
+}
 ```
-
-### Notes
-
-- The `WalletPaymentForm` component is rendered conditionally (e.g., in a popup or modal).
-- The `customerId` should be obtained from your authentication system or merchant account.
-- The `amount` should reflect the total amount to be paid (e.g., from your cart).
 
 ## API Reference
 
-### Frontend (React)
+### `EvzonePay` Class
 
-- **`WalletPaymentForm` Component**
-    - `customerId` (string, required): The unique identifier for the customer making the payment.
-    - `amount` (number, required): The payment amount in the default currency.
-    - `onClose` (function, required): Callback triggered when the payment form is closed.
-    - `onSuccess` (function, required): Callback triggered on successful payment.
+- **Constructor**:
+  - `merchantId` (String, required): Your Evzone Africa merchant ID.
+  - `apiKey` (String, required): Your Evzone Africa API key.
+  - `context` (Context, required): The Android context (e.g., Activity).
+
+- **Methods**:
+  - `startPayment(businessName: String, username: String, itemsPurchased: String, totalAmount: Double, callback: PaymentResultCallback)`: Launches the payment UI and processes the payment with the provided details.
+
+### `PaymentResultCallback` Interface
+
+- `onSuccess(transactionId: String)`: Called when the payment is successful, returning a unique transaction ID.
+- `onError(errorMessage: String)`: Called when an error occurs, providing an error message.
+- `onCancel()`: Called when the user cancels the payment.
 
 ## Examples
 
 ### Complete Checkout Flow
 
 1. User adds items to the cart.
-2. User clicks "Make Payments" to trigger the payment form.
-3. The `WalletPaymentForm` component is displayed.
-4. Upon successful payment, the `onSuccess` callback is triggered, and the form is closed via `onClose`.
+2. User clicks "Pay Now" to initiate the payment.
+3. The `startPayment` method is invoked with `businessName`, `username`, `itemsPurchased`, and `totalAmount`.
+4. Upon success, the `onSuccess` callback is triggered with a transaction ID.
 
-See the [examples folder](examples/) for more detailed sample code.
+For more examples, refer to the [sample app](https://github.com/Bravothe/payment-library/tree/main/sample).
 
 ## Configuration
 
-The `WalletPaymentForm` component currently supports the props listed in the API Reference. Additional customization (e.g., theming, currency) may be added in future updates. Check the latest documentation or release notes for updates.
+### UI Customization
+
+You can modify the UI components of the SDK by overriding the default layout resources. For further details, check out the [sample app](https://github.com/Bravothe/payment-library/tree/main/sample).
 
 ## Troubleshooting
 
-- **Payment Form Not Displaying**: Ensure the CSS file is correctly imported (`evzone-africa/dist/dist/WalletPaymentForm.css`) and that the `showPopup` state (or equivalent) is toggled correctly.
-- **"Invalid Customer ID" Error**: Verify that the `customerId` is valid and matches your Evzone Africa merchant account records.
-- **Payment Not Processing**: Ensure your network connection is stable and that the Evzone Africa servers are reachable.
+- **Authentication Failed**: Ensure your `authToken` is correct in `gradle.properties`.
+- **Invalid Merchant ID**: Double-check your merchant credentials with Evzone Africa.
+- **Payment UI Not Displaying**: Ensure the `context` is valid, and proper permissions are granted.
 
 ## Contributing
 
-We welcome contributions to improve `evzone-africa`! To contribute:
+To contribute to this project:
+
 1. Fork the repository.
 2. Create a new branch (`git checkout -b feature/your-feature`).
-3. Make your changes and commit them (`git commit -m "Add your feature"`).
+3. Commit your changes (`git commit -m "Add your feature"`).
 4. Push to your branch (`git push origin feature/your-feature`).
 5. Open a Pull Request.
 
-Please read our [Contributing Guidelines](CONTRIBUTING.md) for more details.
-
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more information.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
 ## Support
 
-For questions, issues, or feature requests, please:
-- Open an issue on our [GitHub Issues page](https://github.com/yourusername/evzone-africa/issues).
-- Contact our support team at support@evzoneafrica.com.
+If you have questions or issues:
 
-
-
+- Open an issue on the [GitHub Issues page](https://github.com/Bravothe/payment-library/issues).
+- Contact support at support@evzoneafrica.com.
 
