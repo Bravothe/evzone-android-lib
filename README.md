@@ -26,7 +26,7 @@
 Before integrating the Evzone Pay SDK, ensure you have the following:
 
 - Android Studio (latest stable version recommended).
-- Minimum SDK version: API 21 (Android 5.0 Lollipop).
+- Minimum SDK version: API 24 (Android 5.0 Lollipop).
 - A registered Evzone Africa merchant account to obtain necessary credentials (e.g., API keys).
 - Kotlin 1.5+ configured in your project.
 - Access to the private GitHub repository hosting the SDK (requires a JitPack auth token).
