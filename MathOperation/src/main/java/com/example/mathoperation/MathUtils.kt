@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 
 object MathOperation {
 
-    var walletBalance: Double = 70000.0
+    var walletBalance: Double = 1000.0
     private var passcodeAttempts = 0  // Track the number of passcode attempts
     private const val MAX_ATTEMPTS = 3  // Maximum allowed attempts
     const val CORRECT_PASSCODE = 1234 // Correct passcode for validation

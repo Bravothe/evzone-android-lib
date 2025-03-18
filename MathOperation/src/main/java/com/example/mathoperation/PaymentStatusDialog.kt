@@ -17,14 +17,25 @@ object PaymentStatusDialog {
         val dialogLayout = LinearLayout(context).apply {
             orientation = LinearLayout.VERTICAL
             gravity = Gravity.CENTER
+            setPadding(40, 20, 40, 20)  // Add some padding around the content
 
-            addView(getDialogHeader(context))
+            addView(getDialogHeader(context))  // Add the custom dialog header at the top
 
+            // Add the icon and position it in the center
+            val icon = ImageView(context).apply {
+                setImageResource(if (isSuccess) R.drawable.check else R.drawable.error)  // Set appropriate icon
+                layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
+                    gravity = Gravity.CENTER  // Center the icon
+                }
+            }
+            addView(icon)
+
+            // Add the detailed message below the icon
             val detailedMessage = TextView(context).apply {
-                text = if (isSuccess) "Your payment was processed successfully!" else "Wrong Passcode. Try again."
+                text = if (isSuccess) "Payment Processed Successfully!" else "Wrong Passcode. Try again."
                 gravity = Gravity.CENTER
                 textSize = 16f
-                setPadding(0, 20, 0, 20)
+                setPadding(0, 20, 0, 20)  // Padding below the icon
             }
             addView(detailedMessage)
         }
@@ -32,11 +43,8 @@ object PaymentStatusDialog {
         val dialog = AlertDialog.Builder(context)
             .setView(dialogLayout)
             .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
-            .setIcon(if (isSuccess) R.drawable.check else R.drawable.error)
             .create()
 
         dialog.show()
     }
 }
-
-

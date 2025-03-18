@@ -43,7 +43,7 @@ object PasscodeDialog {
             setPadding(0, 10, 0, 10)
             gravity = Gravity.CENTER
             text = if (attempts >= maxAttempts) {
-                "You are locked out! Try again later."
+                "You are locked out! Try again after 30 minutes."
             } else {
                 "You have ${maxAttempts - attempts} attempt(s) left."
             }
