@@ -2,7 +2,8 @@ package com.example.mathoperation
 
 import android.content.Context
 import android.widget.Toast
-import com.example.mathoperation.Dialogs.showLoadingDialog
+import com.example.mathoperation.dialogs.PasscodeDialog
+import com.example.mathoperation.dialogs.SummaryDialog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -10,28 +11,26 @@ import kotlinx.coroutines.launch
 
 object MathOperation {
 
-    var walletBalance: Double = 1000.0
+    var walletBalance: Double = 70000.0
     private var passcodeAttempts = 0  // Track the number of passcode attempts
     private const val MAX_ATTEMPTS = 3  // Maximum allowed attempts
     const val CORRECT_PASSCODE = 1234 // Correct passcode for validation
     private var isLockedOut = false  // Flag to indicate if the user is locked out
 
     fun startPayment(context: Context, businessName: String, userName: String, itemsPurchased: String, totalAmount: Double) {
-        showLoadingDialog(context) {
+        LoadingDialog.showLoadingDialog(context) {
             showProductSummary(context, businessName, userName, itemsPurchased, totalAmount)
         }
     }
 
     private fun showProductSummary(context: Context, businessName: String, userName: String, itemsPurchased: String, totalAmount: Double) {
-        Dialogs.showSummaryDialog(context, businessName, userName, itemsPurchased, totalAmount) { amount ->
+        SummaryDialog.showSummaryDialog(context, businessName, userName, itemsPurchased, totalAmount) { amount ->
             showAmountDeductionDialog(context, amount)
         }
     }
 
     private fun showAmountDeductionDialog(context: Context, amount: Double) {
-        Dialogs.showPasscodeDialog(context,
-            amount.toInt(), passcodeAttempts, MAX_ATTEMPTS
-        ) { passcode ->
+        PasscodeDialog.showPasscodeDialog(context, amount.toInt(), passcodeAttempts, MAX_ATTEMPTS) { passcode ->
             if (isLockedOut) {
                 // Inform user they are locked out and prevent further attempts
                 Toast.makeText(context, "You are locked out! Please try after 30 minutes.", Toast.LENGTH_LONG).show()
@@ -61,7 +60,6 @@ object MathOperation {
     }
 
     private fun isPasscodeCorrect(passcode: String): Boolean {
-        // Convert the passcode to Int and compare
         return passcode.toIntOrNull() == CORRECT_PASSCODE
     }
 
