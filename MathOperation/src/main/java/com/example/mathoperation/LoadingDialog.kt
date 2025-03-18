@@ -1,9 +1,12 @@
 package com.example.mathoperation
 
+import android.animation.ObjectAnimator
 import android.content.Context
 import android.graphics.Color
 import android.os.Handler
 import android.os.Looper
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.widget.*
@@ -41,30 +44,30 @@ object LoadingDialog {
                 }
                 addView(logoImage)
 
-                // Add the blinking company name
+                // Add the company name text with specific formatting
                 val companyNameText = TextView(context).apply {
-                    text = "Evzone Pay"
-                    textSize = 24f
+                    val companyText = "EVzone Pay"
+                    text = companyText
+                    textSize = 32f // Increase the font size
                     gravity = Gravity.CENTER
+                    setTypeface(null, android.graphics.Typeface.BOLD) // Set the text to bold
+
+                    // Adjust the colors (softer green for "Evzone" and orange for "Pay")
+                    val spannableText = SpannableString(companyText)
+                    spannableText.setSpan(ForegroundColorSpan(Color.parseColor("#4CAF50")), 0, 6, 0)  // Softer green
+                    spannableText.setSpan(ForegroundColorSpan(Color.parseColor("#FFA500")), 7, companyText.length, 0)  // Orange for "Pay"
+                    text = spannableText
                 }
                 addView(companyNameText)
 
-                // Blinking effect for the text
-                val handler = Handler(Looper.getMainLooper())
-                val blinkingRunnable = object : Runnable {
-                    var isGreen = true
-                    override fun run() {
-                        if (isGreen) {
-                            companyNameText.setTextColor(Color.GREEN)
-                        } else {
-                            companyNameText.setTextColor(Color.parseColor("#FFA500")) // Orange color
-                        }
-                        isGreen = !isGreen
-                        handler.postDelayed(this, 500) // Toggle the color every 500ms
-                    }
+                // Set up the fade-in fade-out animation for the text (appearing and disappearing)
+                val fadeInOutAnimator = ObjectAnimator.ofFloat(companyNameText, "alpha", 0f, 1f, 0f)
+                fadeInOutAnimator.apply {
+                    duration = 1000  // Duration of one complete fade-in and fade-out cycle
+                    repeatCount = ObjectAnimator.INFINITE  // Repeat the animation infinitely
+                    repeatMode = ObjectAnimator.RESTART  // Restart the fade-in fade-out after each cycle
                 }
-
-                handler.post(blinkingRunnable)
+                fadeInOutAnimator.start()  // Start the fade-in and fade-out animation
             }
             setView(loadingLayout)
             setCancelable(false)
@@ -77,7 +80,7 @@ object LoadingDialog {
 
         // Simulate a delay before showing the next dialog
         CoroutineScope(Dispatchers.Main).launch {
-            delay(2000) // Delay of 2 seconds before showing the next dialog
+            delay(3000) // Delay of 2 seconds before showing the next dialog
             onFinish()  // Transition to the next dialog
             loadingDialog.dismiss()
         }
