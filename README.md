@@ -1,6 +1,6 @@
 
-<<<<<<< HEAD
 ## Table of Contents
+
 - [Features](#features)
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
@@ -91,31 +91,31 @@ To integrate Evzone Pay into your application, follow these steps:
 Here is an example of how to initiate the payment process:
 
 ```kotlin
-package com.example.payment
-
+package com.example.mysamplelibrary
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
-import com.evzoneafrica.payment.EvzonePay
+import com.example.mathoperation.MathOperation
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val btnPay: Button = findViewById(R.id.btnPay)
+        val btnPay: Button = findViewById(R.id.btnShowMessage)
 
         btnPay.setOnClickListener {
             val businessName = "Awesome Store"
-            val username = "John Doe"
+            val userName = "John Doe"
             val itemsPurchased = "1x Laptop, 2x Phone Chargers"
             val totalAmount = 5000.0
 
-            // Start the payment process
-            EvzonePay.startPayment(this, businessName, username, itemsPurchased, totalAmount)
+            // Start the payment process using
+            MathOperation.startPayment(this, businessName, userName, itemsPurchased, totalAmount)
         }
     }
 }
+
 ```
 
 ## API Reference
@@ -178,7 +178,4 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 If you have questions or issues:
 
 - Open an issue on the [GitHub Issues page](https://github.com/Bravothe/payment-library/issues).
-- Contact support at support@evzoneafrica.com.
-
-=======
->>>>>>> 72b287693b0b4816f2e5ffc38f285616dd887e9c
+- Contact support at support@evzoneafrica.com
