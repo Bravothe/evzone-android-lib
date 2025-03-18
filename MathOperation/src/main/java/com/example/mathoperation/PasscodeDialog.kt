@@ -3,6 +3,7 @@ package com.example.mathoperation.dialogs
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.Drawable
+import android.graphics.drawable.GradientDrawable
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.widget.*
@@ -109,12 +110,25 @@ object PasscodeDialog {
         }
 
         val message = "A total of $$totalAmount will be deducted from your Evzone Pay Wallet, including Service Fee: $$serviceFee and VAT: $$vat. Enter the passcode to approve the Transaction."
-
         val messageText = TextView(context).apply {
             text = message
             gravity = Gravity.CENTER
             textSize = 16f
+
+            // Create a shape drawable with rounded corners and light blue background
+            val shapeDrawable = GradientDrawable().apply {
+                shape = GradientDrawable.RECTANGLE
+                cornerRadius = 20f  // Adjust this value to control the roundness of the corners
+                setColor(Color.parseColor("#ADD8E6"))  // Light blue background color
+            }
+
+            // Set the shape drawable as the background of the TextView
+            background = shapeDrawable
+
+            setPadding(20, 20, 20, 20)  // Adjust padding to suit your layout
         }
+
+
 
         // Now build the layout for the dialog
         val layout = LinearLayout(context).apply {
@@ -129,7 +143,7 @@ object PasscodeDialog {
         // Dialog creation with proper handling of passcode inputs
         val dialog = AlertDialog.Builder(context)
             .setView(layout)
-            .setPositiveButton("Submit") { dialog, _ ->
+            .setPositiveButton("Confirm") { dialog, _ ->
                 if (attempts >= maxAttempts) {
                     Toast.makeText(context, "You are locked out!", Toast.LENGTH_LONG).show()
                     return@setPositiveButton

@@ -23,11 +23,18 @@ object InsufficientBalanceDialog {
 
             // Add the icon (error icon in this case)
             val icon = ImageView(context).apply {
-                setImageResource(R.drawable.error)  // Set the error icon
-                layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
+                setImageResource(R.drawable.low)  // Set the error icon
+
+                // Set fixed width and height for the icon (e.g., 50x50 dp)
+                val sizeInDp = 50  // Set the desired size in dp
+                val scale = context.resources.displayMetrics.density  // Convert dp to pixels
+                val sizeInPx = (sizeInDp * scale).toInt()
+
+                layoutParams = LinearLayout.LayoutParams(sizeInPx, sizeInPx).apply {
                     gravity = Gravity.CENTER  // Center the icon horizontally
                 }
             }
+
             addView(icon)
 
             // Add the insufficient balance message below the icon
