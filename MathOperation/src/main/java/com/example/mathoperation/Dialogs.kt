@@ -12,9 +12,6 @@ object Dialogs {
         SummaryDialog.showSummaryDialog(context, businessName, userName, itemsPurchased, totalAmount, onNext)
     }
 
-    fun showPasscodeDialog(context: Context, amount: Int, attempts: Int, maxAttempts: Int, onSubmit: (String) -> Unit) {
-        PasscodeDialog.showPasscodeDialog(context, amount, attempts, maxAttempts, onSubmit)
-    }
 
     fun showPaymentStatus(context: Context, isSuccess: Boolean) {
         val remainingAttempts = 0
