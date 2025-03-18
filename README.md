@@ -16,26 +16,25 @@
 ## Features
 
 - Easy integration with Android e-commerce apps.
-- Secure payment processing using the Evzone Africa digital wallet.
+- Secure payment processing using the EVzone digital wallet.
 - Customizable payment UI components.
 - Comprehensive error handling and validation.
 - Lightweight and optimized for performance on Android devices.
 
 ## Prerequisites
 
-Before integrating the Evzone Pay SDK, ensure you have the following:
+Before integrating the EVzone Pay SDK, ensure you have the following:
 
 - Android Studio (latest stable version recommended).
 - Minimum SDK version: API 24 (Android 5.0 Lollipop).
-- A registered Evzone Africa merchant account to obtain necessary credentials (e.g., API keys).
+- A registered EVzone merchant account to obtain necessary credentials (e.g., API keys).
 - Kotlin 1.5+ configured in your project.
-- Access to the private GitHub repository hosting the SDK (requires a JitPack auth token).
 
 ## Installation
 
 ### Step 1: Add the Dependency
 
-In your app-level `build.gradle`, add the Evzone Pay SDK dependency. Replace `TAG` with the specific release tag (e.g., `1.0.0`) or commit hash from the repository:
+In your app-level `build.gradle`, add the EVzone Pay SDK dependency. Replace `TAG` with the specific release tag (e.g., `1.0.0`) or commit hash from the repository:
 
 ```kotlin
 
@@ -62,7 +61,7 @@ Sync your project with Gradle files to download the library.
 
 ### Basic Integration
 
-To integrate Evzone Pay into your application, follow these steps:
+To integrate EVzone Pay into your application, follow these steps:
 
 1. Initialize the SDK with your merchant credentials.
 2. Launch the payment process, passing the required parameters: `businessName`, `username`, `itemsPurchased`, and `totalAmount`.
@@ -100,11 +99,11 @@ class MainActivity : AppCompatActivity() {
 
 ## API Reference
 
-### `EvzonePay` Class
+### `EVzonePay` Class
 
 - **Constructor**:
-  - `merchantId` (String, required): Your Evzone Africa merchant ID.
-  - `apiKey` (String, required): Your Evzone Africa API key.
+  - `merchantId` (String, required): Your EVzone merchant ID.
+  - `apiKey` (String, required): Your EVzone API key.
   - `context` (Context, required): The Android context (e.g., Activity).
 
 - **Methods**:
@@ -136,7 +135,7 @@ You can modify the UI components of the SDK by overriding the default layout res
 ## Troubleshooting
 
 - **Authentication Failed**: Ensure your `authToken` is correct in `gradle.properties`.
-- **Invalid Merchant ID**: Double-check your merchant credentials with Evzone Africa.
+- **Invalid Merchant ID**: Double-check your merchant credentials with EVzone.
 - **Payment UI Not Displaying**: Ensure the `context` is valid, and proper permissions are granted.
 
 ## Contributing
@@ -158,4 +157,4 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 If you have questions or issues:
 
 - Open an issue on the [GitHub Issues page](https://github.com/Bravothe/payment-library/issues).
-- Contact support at support@evzoneafrica.com
+- Contact support at support@evzone.com
