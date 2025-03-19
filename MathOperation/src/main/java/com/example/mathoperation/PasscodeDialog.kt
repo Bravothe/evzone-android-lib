@@ -6,6 +6,11 @@ import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
 import android.text.InputFilter
 import android.text.InputType
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.style.AbsoluteSizeSpan
+import android.text.style.ForegroundColorSpan
+import android.text.style.StyleSpan
 import android.util.TypedValue
 import android.view.Gravity
 import android.widget.*
@@ -61,20 +66,47 @@ object PasscodeDialog {
         headerLayout.addView(closeButton)
 
         val merchantText = TextView(context).apply {
-            text = "Merchant Info:\n$merchantName\nTransaction ID: $transactionId"
-            textSize = 16f
-            setTextColor(Color.BLACK)
-            setTypeface(null, Typeface.BOLD)
-            gravity = Gravity.START
+            // Create a SpannableString to apply different styles to different parts of the text
+            val spannable = SpannableString("Merchant Info:\n$merchantName \n$transactionId \t\t\t\t\t\t\t\t\t\t\t$amount")
+
+            // Apply style to "Merchant Info:"
+            val startMerchantInfo = 0
+            val endMerchantInfo = "Merchant Info:".length
+            val softGreen = Color.parseColor("#4CAF50") // Soft green color
+
+            // Set the "Merchant Info:" part to be bold, green, and larger font size
+            spannable.setSpan(ForegroundColorSpan(softGreen), startMerchantInfo, endMerchantInfo, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            spannable.setSpan(StyleSpan(Typeface.BOLD), startMerchantInfo, endMerchantInfo, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            spannable.setSpan(AbsoluteSizeSpan(24, true), startMerchantInfo, endMerchantInfo, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+            // Apply style to the amount to make it bold
+            val startAmount = spannable.length - amount.length
+            val endAmount = spannable.length
+            spannable.setSpan(StyleSpan(Typeface.BOLD), startAmount, endAmount, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+            // Set the styled text as the TextView text
+            text = spannable
+
+            // The rest of the text (merchantName, transactionId, amount) remains unaffected
+            textSize = 18f // Default text size for other parts
+            setTextColor(Color.BLACK) // Default text color for other parts
+            gravity = Gravity.START // Align the text to the left by default
+
+            // Optionally, use padding to adjust the layout and push the amount toward the right
+            setPadding(0, 0, 50, 0) // Padding to give space on the right
         }
 
-        val amountText = TextView(context).apply {
-            text = "UGX $amount"
-            textSize = 18f
-            setTypeface(null, Typeface.BOLD)
+
+
+        // Add a label before the passcode input field
+        val passcodeLabel = TextView(context).apply {
+            text = "Enter Passcode : "
+            textSize = 16f
             setTextColor(Color.BLACK)
-            gravity = Gravity.END
+            gravity = Gravity.START
+            setPadding(20, 20, 20, 10) // Padding to separate from the passcode input field
         }
+
         val passcodeLayout = LinearLayout(context).apply {
             orientation = LinearLayout.HORIZONTAL
             setPadding(10, 10, 10, 10)
@@ -124,11 +156,9 @@ object PasscodeDialog {
             }
         }
 
-// Add the EditText and ImageView to the layout
+        // Add the EditText and ImageView to the layout
         passcodeLayout.addView(passcodeInput)
         passcodeLayout.addView(toggleVisibility)
-
-
 
         val infoBox = TextView(context).apply {
             text = "You are making a payment to $merchantName.\nAmount UGX $amount will be deducted from your wallet, including $tax tax and $walletFee wallet fee."
@@ -144,7 +174,6 @@ object PasscodeDialog {
                 setColor(Color.parseColor("#D9EFFF")) // Set the background color
             }
         }
-
 
         val buttonsLayout = LinearLayout(context).apply {
             orientation = LinearLayout.VERTICAL
@@ -176,8 +205,6 @@ object PasscodeDialog {
             }
         }
 
-
-
         val backButton = Button(context).apply {
             text = "Back"
             textSize = 16f
@@ -188,13 +215,12 @@ object PasscodeDialog {
             isAllCaps = false
         }
 
-
         buttonsLayout.addView(confirmButton)
         buttonsLayout.addView(backButton)
 
         layout.addView(headerLayout)
         layout.addView(merchantText)
-        layout.addView(amountText)
+        layout.addView(passcodeLabel) // Add the passcode label before the input field
         layout.addView(passcodeLayout)
         layout.addView(infoBox)
         layout.addView(buttonsLayout)

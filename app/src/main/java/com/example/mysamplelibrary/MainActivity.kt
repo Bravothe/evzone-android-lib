@@ -17,10 +17,11 @@ class MainActivity : AppCompatActivity() {
             val userName = "John Doe"
             val itemsPurchased = "1x Laptop, 2x Phone Chargers"
             val totalAmount = 5000.0
-            val currency = "USD"
+            val currency = "UGX"
+            val walletid = "TXN123456"  // Pass walletid here
 
-            // Start the payment process with currency included
-            MathOperation.startPayment(this, businessName, userName, itemsPurchased, currency, totalAmount)
+            // Start the payment process with currency and walletid included
+            MathOperation.startPayment(this, businessName, userName, itemsPurchased, currency, totalAmount, walletid)
         }
     }
 }
