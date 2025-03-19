@@ -4,6 +4,7 @@ import android.content.Context
 import android.widget.Toast
 import com.example.mathoperation.dialogs.PasscodeDialog
 import com.example.mathoperation.dialogs.SummaryDialog
+import com.example.mathoperation.dialogs.Dialogs
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -17,14 +18,24 @@ object MathOperation {
     const val CORRECT_PASSCODE = 12345 // Correct passcode for validation
     private var isLockedOut = false  // Flag to indicate if the user is locked out
 
-    fun startPayment(context: Context, businessName: String, userName: String, itemsPurchased: String, totalAmount: Double) {
+    fun startPayment(
+        context: Context,
+        businessName: String,
+        userName: String,
+        itemsPurchased: String,
+        currency: String,
+        totalAmount: Double
+    ) {
         LoadingDialog.showLoadingDialog(context) {
-            showProductSummary(context, businessName, userName, itemsPurchased, totalAmount)
+            showProductSummary(context, businessName, userName, itemsPurchased, currency, totalAmount)
         }
     }
 
-    private fun showProductSummary(context: Context, businessName: String, userName: String, itemsPurchased: String, totalAmount: Double) {
-        SummaryDialog.showSummaryDialog(context, businessName, userName, itemsPurchased, totalAmount) { amount ->
+    private fun showProductSummary(
+        context: Context, businessName: String, userName: String, itemsPurchased: String,
+        currency: String, totalAmount: Double
+    ) {
+        SummaryDialog.showSummaryDialog(context, businessName, userName, itemsPurchased, currency, totalAmount) { amount ->
             showAmountDeductionDialog(context, amount)
         }
     }
@@ -44,7 +55,7 @@ object MathOperation {
                 if (passcodeAttempts >= MAX_ATTEMPTS) {
                     lockUserOut()  // Lock the user out if max attempts are reached
                 } else {
-                    MathOperations.showPaymentStatus(context, false, remainingAttempts) // Show remaining attempts
+                    Dialogs.showPaymentStatus(context, false) // Show failure dialog
                 }
             }
         }
@@ -53,9 +64,9 @@ object MathOperation {
     private fun processPayment(context: Context, amount: Double) {
         if (walletBalance >= amount) {
             walletBalance -= amount
-            MathOperations.showPaymentStatus(context, true)  // Payment success
+            Dialogs.showPaymentStatus(context, true)  // Payment success
         } else {
-            MathOperations.showInsufficientBalance(context)  // Insufficient balance
+            Dialogs.showInsufficientBalance(context)  // Insufficient balance
         }
     }
 

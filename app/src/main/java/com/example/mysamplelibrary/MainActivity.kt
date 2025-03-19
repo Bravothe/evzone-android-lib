@@ -1,4 +1,5 @@
 package com.example.mysamplelibrary
+
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
@@ -12,13 +13,14 @@ class MainActivity : AppCompatActivity() {
         val btnPay: Button = findViewById(R.id.btnShowMessage)
 
         btnPay.setOnClickListener {
-            val businessName = "Awesome Store"
+            val businessName = "Xtrymz Technologies - Kasese"
             val userName = "John Doe"
             val itemsPurchased = "1x Laptop, 2x Phone Chargers"
             val totalAmount = 5000.0
+            val currency = "USD"
 
-            // Start the payment process using
-            MathOperation.startPayment(this, businessName, userName, itemsPurchased, totalAmount)
+            // Start the payment process with currency included
+            MathOperation.startPayment(this, businessName, userName, itemsPurchased, currency, totalAmount)
         }
     }
 }

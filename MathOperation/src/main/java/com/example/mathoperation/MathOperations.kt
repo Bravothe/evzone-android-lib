@@ -4,7 +4,6 @@ import android.content.Context
 import com.example.mathoperation.dialogs.InsufficientBalanceDialog
 import com.example.mathoperation.dialogs.PaymentStatusDialog
 import com.example.mathoperation.dialogs.SummaryDialog
-
 object MathOperations {
 
     // Business logic related to showing different dialogs or calculations
@@ -13,10 +12,10 @@ object MathOperations {
         businessName: String,
         userName: String,
         itemsPurchased: String,
-        totalAmount: Double,
+        totalAmount: Double,  // Change to Double
         onNext: (Double) -> Unit
     ) {
-        SummaryDialog.showSummaryDialog(context, businessName, userName, itemsPurchased, totalAmount, onNext)
+        SummaryDialog.showSummaryDialog(context, businessName, userName, itemsPurchased, "$", totalAmount, onNext)
     }
 
     fun showPaymentStatus(
@@ -31,3 +30,4 @@ object MathOperations {
         InsufficientBalanceDialog.showInsufficientBalance(context)
     }
 }
+
