@@ -13,7 +13,7 @@ class MainActivity : AppCompatActivity() {
         val btnPay: Button = findViewById(R.id.btnShowMessage)
 
         btnPay.setOnClickListener {
-            val businessName = "Xtrymz Technologies - Kasese"
+            val businessName = "Xtrymz Technologies"
             val userName = "John Doe"
             val itemsPurchased = "1x Laptop, 2x Phone Chargers"
             val totalAmount = 5000.0

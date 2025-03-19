@@ -10,6 +10,7 @@ import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.cardview.widget.CardView
 import com.example.mathoperation.R
+import java.text.DecimalFormat
 
 object SummaryDialog {
 
@@ -104,7 +105,11 @@ object SummaryDialog {
                     }
 
                     val totalBillingAmount = TextView(context).apply {
-                        text = "$currency $totalAmount"
+                        // Format the amount with commas
+                        val formattedAmount = DecimalFormat("#,###").format(totalAmount)
+
+                        // Set the text with currency and formatted amount
+                        text = "$currency $formattedAmount"
                         textSize = 24f
                         setTextColor(Color.parseColor("#009900"))
                         typeface = Typeface.DEFAULT_BOLD
@@ -115,12 +120,28 @@ object SummaryDialog {
                         orientation = LinearLayout.VERTICAL
                         setPadding(20, 20, 20, 20)
 
+                        // Title TextView
+                        val title = TextView(context).apply {
+                            text = "Transaction's Details"  // Set the title text
+                            textSize = 18f  // Adjust text size as needed
+                            setTextColor(Color.BLACK)  // Set the text color
+                            setTypeface(null, Typeface.BOLD)  // Make the text bold
+                            setPadding(0, 0, 0, 20)  // Add space below the title
+                        }
+
+                        // Add the title to the container
+                        addView(title)
+
+                        // Format the amount with commas and add the currency symbol
+                        val formattedAmount = DecimalFormat("#,###").format(totalAmount)
+
+                        // Add the details to the container
                         val details = listOf(
                             "Type" to "Booking",
                             "To" to userName,
                             "Particulars" to itemsPurchased,
                             "Billed Currency" to currency,
-                            "Total Billing" to "$currency$totalAmount"
+                            "Total Billing" to "$currency $formattedAmount"  // Space between currency and formatted amount
                         )
 
                         details.forEach { (label, value) ->
@@ -134,6 +155,7 @@ object SummaryDialog {
                             )
                         }
                     }
+
 
                     val confirmButton = Button(context).apply {
                         text = "Continue"
