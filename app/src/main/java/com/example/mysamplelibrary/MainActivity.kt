@@ -18,7 +18,7 @@ class MainActivity : AppCompatActivity() {
             val itemsPurchased = "1x Laptop, 2x Phone Chargers"
             val totalAmount = 5000.0
             val currency = "UGX"
-            val walletid = "TXN123456"  // Pass walletid here
+            val walletid = "W-256-765235532"  // Pass walletid here
 
             // Start the payment process with currency and walletid included
             MathOperation.startPayment(this, businessName, userName, itemsPurchased, currency, totalAmount, walletid)

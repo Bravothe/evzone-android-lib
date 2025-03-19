@@ -67,7 +67,7 @@ object PasscodeDialog {
 
         val merchantText = TextView(context).apply {
             // Create a SpannableString to apply different styles to different parts of the text
-            val spannable = SpannableString("Merchant Info:\n$merchantName \n$transactionId \t\t\t\t\t\t\t\t\t\t\t$amount")
+            val spannable = SpannableString("Merchant Info:\n$merchantName \n$transactionId \t\t\t\t\t$amount")
 
             // Apply style to "Merchant Info:"
             val startMerchantInfo = 0
