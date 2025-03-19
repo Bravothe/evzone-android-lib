@@ -4,6 +4,7 @@ import android.content.Context
 import android.widget.Toast
 import com.example.mathoperation.dialogs.PasscodeDialog
 import com.example.mathoperation.dialogs.SummaryDialog
+import com.example.mathoperation.dialogs.UsernameErrorDialog
 import com.example.mathoperation.dialogs.Dialogs
 import kotlinx.coroutines.*
 
@@ -16,17 +17,22 @@ object MathOperation {
 
     fun startPayment(
         context: Context,
-        businessName: String, // Business name passed
-        userName: String,
+        businessName: String,
+        userName: String?,
         itemsPurchased: String,
         currency: String,
         totalAmount: Double,
-        walletid: String // walletid passed
+        walletid: String
     ) {
-        LoadingDialog.showLoadingDialog(context) {
-            showProductSummary(
-                context, businessName, userName, itemsPurchased, currency, totalAmount, walletid
-            )
+        if (userName.isNullOrEmpty()) {
+            UsernameErrorDialog.showUsernameErrorDialog(context) { enteredUsername ->
+                // Use the entered username to restart the payment process
+                startPayment(context, businessName, enteredUsername, itemsPurchased, currency, totalAmount, walletid)
+            }
+        } else {
+            LoadingDialog.showLoadingDialog(context) {
+                showProductSummary(context, businessName, userName, itemsPurchased, currency, totalAmount, walletid)
+            }
         }
     }
 
@@ -40,7 +46,6 @@ object MathOperation {
         walletid: String
     ) {
         SummaryDialog.showSummaryDialog(context, businessName, userName, itemsPurchased, currency, totalAmount) { amount ->
-            // Pass businessName, walletid, and currency to the next function
             showAmountDeductionDialog(context, amount, walletid, businessName, currency)
         }
     }
@@ -49,20 +54,18 @@ object MathOperation {
         context: Context,
         amount: Double,
         walletid: String,
-        businessName: String, // Added businessName here
+        businessName: String,
         currency: String
     ) {
-        // Create a formatted string with the currency and amount
-        val amountWithCurrency = "$currency ${amount.format(2)}" // Assuming you want two decimal places
+        val amountWithCurrency = "$currency ${amount.format(2)}"
 
-        // PasscodeDialog to show the formatted string
         PasscodeDialog.showPasscodeDialog(
             context,
-            businessName,  // Use businessName passed as a parameter
+            businessName,
             walletid,
-            amountWithCurrency, // Display the currency and amount
-            "UGX 500",  // Assuming this is another amount displayed
-            "UGX 100"   // Assuming this is another amount displayed
+            amountWithCurrency,
+            "UGX 500",
+            "UGX 100"
         ) { passcode ->
             if (isLockedOut) {
                 Toast.makeText(context, "You are locked out! Please try after 30 minutes.", Toast.LENGTH_LONG).show()
@@ -98,6 +101,5 @@ object MathOperation {
         }
     }
 
-    // Extension function to format a Double to a string with a specific number of decimals
     private fun Double.format(digits: Int) = "%.${digits}f".format(this)
 }

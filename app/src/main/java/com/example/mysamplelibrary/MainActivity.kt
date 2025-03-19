@@ -14,7 +14,7 @@ class MainActivity : AppCompatActivity() {
 
         btnPay.setOnClickListener {
             val businessName = "Xtrymz Technologies"
-            val userName = "John Doe"
+            val userName = "Allan Pro"
             val itemsPurchased = "1x Laptop, 2x Phone Chargers"
             val totalAmount = 5000.0
             val currency = "UGX"
