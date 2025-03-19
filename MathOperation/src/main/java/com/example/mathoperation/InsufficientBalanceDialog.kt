@@ -1,6 +1,7 @@
 package com.example.mathoperation.dialogs
 
 import android.content.Context
+import android.graphics.drawable.GradientDrawable
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.widget.*
@@ -97,11 +98,22 @@ object InsufficientBalanceDialog {
         // Add Funds Button
         val addFundsButton = Button(context).apply {
             text = "Add Funds"
-            setBackgroundColor(context.getColor(R.color.blue))
-            setTextColor(context.getColor(R.color.white))
+            setTextColor(context.getColor(R.color.white))  // Set the text color
             textSize = 16f
             setPadding(20, 10, 20, 10)
+
+            // Set the background with rounded corners
+            background = GradientDrawable().apply {
+                shape = GradientDrawable.RECTANGLE
+                cornerRadius = 20f  // Adjust this value to control the roundness of the corners
+                setColor(context.getColor(R.color.blue))  // Set the background color
+            }
+
+            // Prevent the text from being capitalized
+            isAllCaps = false
         }
+
+
 
         // Add views to the main layout
         dialogLayout.addView(headerContainer) // Header (with close button)

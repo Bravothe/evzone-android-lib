@@ -4,7 +4,9 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
+import android.text.InputFilter
 import android.text.InputType
+import android.util.TypedValue
 import android.view.Gravity
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
@@ -73,52 +75,59 @@ object PasscodeDialog {
             setTextColor(Color.BLACK)
             gravity = Gravity.END
         }
-
         val passcodeLayout = LinearLayout(context).apply {
             orientation = LinearLayout.HORIZONTAL
             setPadding(10, 10, 10, 10)
-            background = GradientDrawable().apply {
-                setColor(Color.LTGRAY)
-                cornerRadius = 15f
-            }
             gravity = Gravity.CENTER_VERTICAL
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
             ).apply {
-                setMargins(0, 0, 0, 30) // Add bottom margin to separate from the info box
+                setMargins(0, 0, 0, 30) // Bottom margin to separate from info box
+            }
+            background = context.getDrawable(R.drawable.passcode_input_border) // Apply border to the whole container
+            // Optional: Apply elevation if you want a shadow effect on the whole container
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                elevation = 5f // Elevation to give a shadow effect
             }
         }
 
-
         val passcodeInput = EditText(context).apply {
-            inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_PASSWORD
-            textSize = 18f
+            inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_PASSWORD // Start with password input
+            setTextSize(TypedValue.COMPLEX_UNIT_SP, 18f)
             setPadding(20, 20, 20, 20)
             maxLines = 1
-            minHeight = 100  // Ensure height consistency
+            minHeight = 100
             layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+            gravity = Gravity.CENTER // Center the text inside the input field
+            // Remove any internal underline (default behavior of EditText)
+            background = null
+
+            // Set max length to 6 digits
+            filters = arrayOf(InputFilter.LengthFilter(6))
         }
 
         val toggleVisibility = ImageView(context).apply {
-            setImageResource(R.drawable.ic_eye_off)
-            layoutParams = LinearLayout.LayoutParams(80, 80)  // Ensure consistent size
+            setImageResource(R.drawable.ic_eye_off) // Initially set to the "eye off" icon (hidden)
+            layoutParams = LinearLayout.LayoutParams(80, 80) // Size of the eye icon
             setPadding(10, 10, 10, 10)
             setOnClickListener {
                 val selection = passcodeInput.selectionStart
                 if (passcodeInput.inputType == (InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_PASSWORD)) {
-                    passcodeInput.inputType = InputType.TYPE_CLASS_NUMBER
-                    setImageResource(R.drawable.ic_eye_on)
+                    passcodeInput.inputType = InputType.TYPE_CLASS_NUMBER // Show passcode (clear text)
+                    setImageResource(R.drawable.ic_eye_on) // Change the icon to "eye on"
                 } else {
-                    passcodeInput.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_PASSWORD
-                    setImageResource(R.drawable.ic_eye_off)
+                    passcodeInput.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_PASSWORD // Hide passcode
+                    setImageResource(R.drawable.ic_eye_off) // Change the icon back to "eye off"
                 }
-                passcodeInput.setSelection(selection)
+                passcodeInput.setSelection(selection) // Retain cursor position
             }
         }
 
+// Add the EditText and ImageView to the layout
         passcodeLayout.addView(passcodeInput)
         passcodeLayout.addView(toggleVisibility)
+
 
 
         val infoBox = TextView(context).apply {
@@ -126,9 +135,16 @@ object PasscodeDialog {
             textSize = 14f
             setTextColor(Color.BLACK)
             setPadding(20, 20, 20, 20)
-            setBackgroundColor(Color.parseColor("#D9EFFF"))
             gravity = Gravity.CENTER
+
+            // Set the background with rounded corners
+            background = GradientDrawable().apply {
+                shape = GradientDrawable.RECTANGLE
+                cornerRadius = 20f // Set the radius of the corners (adjust as needed)
+                setColor(Color.parseColor("#D9EFFF")) // Set the background color
+            }
         }
+
 
         val buttonsLayout = LinearLayout(context).apply {
             orientation = LinearLayout.VERTICAL
@@ -139,18 +155,27 @@ object PasscodeDialog {
             text = "Confirm"
             textSize = 16f
             setTextColor(Color.WHITE)
-            backgroundTintList = ContextCompat.getColorStateList(context, R.color.blue)  // Ensure blue color
             setPadding(20, 20, 20, 20)
+
+            // Set the background with rounded corners
+            background = GradientDrawable().apply {
+                shape = GradientDrawable.RECTANGLE
+                cornerRadius = 20f // Adjust the radius to control the rounding
+                setColor(ContextCompat.getColor(context, R.color.blue)) // Set background color
+            }
+            isAllCaps = false
+
             setOnClickListener {
                 val passcode = passcodeInput.text.toString()
                 if (passcode.length != 6) {
-                    Toast.makeText(context, "Passcode must be 5 digits.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Passcode must be 6 digits.", Toast.LENGTH_SHORT).show()
                 } else {
                     onSubmit(passcode)
                     dialog.dismiss()
                 }
             }
         }
+
 
 
         val backButton = Button(context).apply {
@@ -160,7 +185,9 @@ object PasscodeDialog {
             setBackgroundColor(Color.TRANSPARENT)
             setPadding(20, 20, 20, 20)
             setOnClickListener { dialog.dismiss() }
+            isAllCaps = false
         }
+
 
         buttonsLayout.addView(confirmButton)
         buttonsLayout.addView(backButton)

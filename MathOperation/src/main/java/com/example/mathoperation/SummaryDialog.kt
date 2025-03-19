@@ -115,13 +115,6 @@ object SummaryDialog {
                         orientation = LinearLayout.VERTICAL
                         setPadding(20, 20, 20, 20)
 
-                        val backgroundDrawable = GradientDrawable().apply {
-                            shape = GradientDrawable.RECTANGLE
-                            cornerRadius = 15f
-                            setColor(Color.parseColor("#F5F5F5"))
-                        }
-                        background = backgroundDrawable
-
                         val details = listOf(
                             "Type" to "Booking",
                             "To" to userName,
@@ -142,18 +135,34 @@ object SummaryDialog {
                         }
                     }
 
-                    // Confirm button
                     val confirmButton = Button(context).apply {
-                        text = "Confirm"
+                        text = "Continue"
                         setTextColor(Color.WHITE)
                         textSize = 18f
-                        setBackgroundColor(Color.parseColor("#007BFF"))
                         setPadding(20, 20, 20, 20)
+
+                        // Set the background with rounded corners
+                        background = GradientDrawable().apply {
+                            shape = GradientDrawable.RECTANGLE
+                            cornerRadius = 20f // Set the radius of the corners (adjust as needed)
+                            setColor(Color.parseColor("#007BFF")) // Set the background color
+                        }
+                        isAllCaps = false
+
+                        layoutParams = LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT
+                        ).apply {
+                            bottomMargin = 30 // Adjust this value to control the space
+                        }
+
                         setOnClickListener {
                             onNext(totalAmount)  // Pass totalAmount to onNext callback
                             dialog.dismiss()      // Dismiss the dialog here
                         }
                     }
+
+
 
                     addView(logo)
                     addView(title)
