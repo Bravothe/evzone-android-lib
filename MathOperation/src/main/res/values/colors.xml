@@ -5,4 +5,16 @@
     <color name="accent_color">#4CAF50</color> <!-- Green -->
     <color name="dialog_background">#FFFFFF</color> <!-- White -->
     <color name="error_color">#FF0000</color> <!-- Red for Errors -->
+
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+
+    <!-- Orange color for warning title -->
+    <color name="orange">#FF9800</color>
+
+    <!-- Blue color for the "Add Funds" button -->
+    <color name="blue">#007BFF</color>
+
+    <!-- Light gray background (if needed for dialog) -->
+    <color name="light_gray">#F5F5F5</color>
 </resources>
