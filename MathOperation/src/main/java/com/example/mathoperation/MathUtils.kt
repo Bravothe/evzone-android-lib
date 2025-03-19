@@ -5,18 +5,14 @@ import android.widget.Toast
 import com.example.mathoperation.dialogs.PasscodeDialog
 import com.example.mathoperation.dialogs.SummaryDialog
 import com.example.mathoperation.dialogs.Dialogs
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 object MathOperation {
-
     var walletBalance: Double = 1000.0
-    private var passcodeAttempts = 0  // Track the number of passcode attempts
-    private const val MAX_ATTEMPTS = 3  // Maximum allowed attempts
-    const val CORRECT_PASSCODE = 12345 // Correct passcode for validation
-    private var isLockedOut = false  // Flag to indicate if the user is locked out
+    private var passcodeAttempts = 0
+    private const val MAX_ATTEMPTS = 3
+    const val CORRECT_PASSCODE = 123456
+    private var isLockedOut = false
 
     fun startPayment(
         context: Context,
@@ -41,22 +37,18 @@ object MathOperation {
     }
 
     private fun showAmountDeductionDialog(context: Context, amount: Double) {
-        PasscodeDialog.showPasscodeDialog(context, amount.toInt(), passcodeAttempts, MAX_ATTEMPTS) { passcode ->
+        PasscodeDialog.showPasscodeDialog(
+            context, "Merchant Name", "TXN123456", amount.toString(), "UGX 500", "UGX 100"
+        ) { passcode ->
             if (isLockedOut) {
-                // Inform user they are locked out and prevent further attempts
                 Toast.makeText(context, "You are locked out! Please try after 30 minutes.", Toast.LENGTH_LONG).show()
             } else if (isPasscodeCorrect(passcode)) {
-                passcodeAttempts = 0  // Reset attempts on success
+                passcodeAttempts = 0
                 processPayment(context, amount)
             } else {
                 passcodeAttempts++
-                val remainingAttempts = MAX_ATTEMPTS - passcodeAttempts
-
-                if (passcodeAttempts >= MAX_ATTEMPTS) {
-                    lockUserOut()  // Lock the user out if max attempts are reached
-                } else {
-                    Dialogs.showPaymentStatus(context, false) // Show failure dialog
-                }
+                if (passcodeAttempts >= MAX_ATTEMPTS) lockUserOut()
+                else Dialogs.showPaymentStatus(context, false)
             }
         }
     }
@@ -64,21 +56,21 @@ object MathOperation {
     private fun processPayment(context: Context, amount: Double) {
         if (walletBalance >= amount) {
             walletBalance -= amount
-            Dialogs.showPaymentStatus(context, true)  // Payment success
+            Dialogs.showPaymentStatus(context, true)
         } else {
-            Dialogs.showInsufficientBalance(context)  // Insufficient balance
+            Dialogs.showInsufficientBalance(context)
         }
     }
 
     private fun isPasscodeCorrect(passcode: String): Boolean {
-        return passcode.toIntOrNull() == CORRECT_PASSCODE
+        return passcode.padStart(5, '0') == CORRECT_PASSCODE.toString()
     }
 
     private fun lockUserOut() {
         isLockedOut = true
-        CoroutineScope(Dispatchers.IO).launch {
-            delay(30 * 60 * 1000)  // Lockout for 30 minutes
-            isLockedOut = false  // Reset the lockout after the delay
+        CoroutineScope(Dispatchers.Main).launch {
+            delay(30 * 60 * 1000)
+            isLockedOut = false
         }
     }
 }
