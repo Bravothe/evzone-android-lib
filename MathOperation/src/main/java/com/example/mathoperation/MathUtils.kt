@@ -1,19 +1,24 @@
 package com.example.mathoperation
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.widget.Toast
 import com.example.mathoperation.dialogs.PasscodeDialog
 import com.example.mathoperation.dialogs.SummaryDialog
-import com.example.mathoperation.dialogs.UsernameErrorDialog
 import com.example.mathoperation.dialogs.Dialogs
 import kotlinx.coroutines.*
 
 object MathOperation {
-    var walletBalance: Double = 1000.0
+    var walletBalance: Double = 100.0
     private var passcodeAttempts = 0
     private const val MAX_ATTEMPTS = 3
     const val CORRECT_PASSCODE = 123456
     private var isLockedOut = false
+
+    // EVzone login URL and redirect URI
+    private const val EXTERNAL_LOGIN_URL = "https://accounts.evzone.app/"
+    private const val REDIRECT_URI = "com.example.mathoperation://callback"
 
     fun startPayment(
         context: Context,
@@ -25,14 +30,42 @@ object MathOperation {
         walletid: String
     ) {
         if (userName.isNullOrEmpty()) {
-            UsernameErrorDialog.showUsernameErrorDialog(context) { enteredUsername ->
-                // Use the entered username to restart the payment process
-                startPayment(context, businessName, enteredUsername, itemsPurchased, currency, totalAmount, walletid)
-            }
+            // Redirect to EVzone for login
+            val loginUrl = "$EXTERNAL_LOGIN_URL?redirect_uri=$REDIRECT_URI&client_id=YOUR_CLIENT_ID"
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(loginUrl))
+            context.startActivity(intent)
         } else {
             LoadingDialog.showLoadingDialog(context) {
                 showProductSummary(context, businessName, userName, itemsPurchased, currency, totalAmount, walletid)
             }
+        }
+    }
+
+    // Function to handle the callback from EVzone and capture login status
+    fun handleLoginCallback(context: Context, data: Intent?, onUserAuthenticated: (String) -> Unit) {
+        data?.data?.let { uri ->
+            if (uri.toString().startsWith(REDIRECT_URI)) {
+                // Extract login status and username from the callback URI
+                val status = uri.getQueryParameter("status") // e.g., "success" or "failed"
+                val username = uri.getQueryParameter("username")
+                val error = uri.getQueryParameter("error")
+
+                if (status == "success" && username != null) {
+                    // Login was successful, proceed with the payment process
+                    Toast.makeText(context, "Login successful for $username", Toast.LENGTH_SHORT).show()
+                    onUserAuthenticated.invoke(username)
+                } else if (error != null) {
+                    // Login failed, show an error message
+                    Toast.makeText(context, "Login failed: $error", Toast.LENGTH_LONG).show()
+                } else {
+                    // Unexpected response, handle as a failure
+                    Toast.makeText(context, "Login failed: Unable to verify login status", Toast.LENGTH_LONG).show()
+                }
+            } else {
+                Toast.makeText(context, "Invalid callback URI", Toast.LENGTH_LONG).show()
+            }
+        } ?: run {
+            Toast.makeText(context, "No callback data received", Toast.LENGTH_LONG).show()
         }
     }
 

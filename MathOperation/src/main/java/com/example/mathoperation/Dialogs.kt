@@ -4,7 +4,6 @@ import android.content.Context
 import com.example.mathoperation.LoadingDialog
 
 object Dialogs {
-
     fun showLoadingDialog(context: Context, onFinish: () -> Unit) {
         LoadingDialog.showLoadingDialog(context, onFinish)
     }
@@ -17,8 +16,7 @@ object Dialogs {
     }
 
     fun showPaymentStatus(context: Context, isSuccess: Boolean) {
-        val remainingAttempts = 0
-        PaymentStatusDialog.showPaymentStatus(context, isSuccess, remainingAttempts)
+        PaymentStatusDialog.showPaymentStatus(context, isSuccess, 0)
     }
 
     fun showInsufficientBalance(context: Context) {

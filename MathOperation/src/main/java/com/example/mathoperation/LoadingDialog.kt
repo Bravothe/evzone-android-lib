@@ -9,38 +9,38 @@ import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.view.Gravity
 import android.view.LayoutInflater
-import android.widget.*
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import com.bumptech.glide.Glide
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 object LoadingDialog {
 
-    // Helper method to load the custom header
-    private fun getDialogHeader(context: Context): LinearLayout {
-        val headerLayout = LayoutInflater.from(context).inflate(R.layout.dialog_header, null) as LinearLayout
-        return headerLayout
+    // Helper method to apply custom theme and animations
+    private fun createStyledDialog(context: Context): AlertDialog {
+        return AlertDialog.Builder(context, R.style.CustomDialogTheme)
+            .create()
     }
 
-    // Method to apply custom animations to the dialog
-    private fun applyDialogAnimations(dialog: AlertDialog) {
-        dialog.window?.setWindowAnimations(R.style.DialogAnimation)
-    }
-
-    // Method to show the loading dialog
     fun showLoadingDialog(context: Context, onFinish: () -> Unit) {
-        val loadingDialog = AlertDialog.Builder(context).apply {
+        val loadingDialog = createStyledDialog(context).apply {
             val loadingLayout = LinearLayout(context).apply {
                 orientation = LinearLayout.VERTICAL
                 gravity = Gravity.CENTER
+                setPadding(32, 32, 32, 32) // Add some padding for better spacing
 
                 // Add the company logo
                 val logoImage = ImageView(context).apply {
                     Glide.with(context)
-                        .load(R.drawable.evzone)  // Replace with your company logo
-                        .error(R.drawable.evzone)  // Fallback logo
+                        .load(R.drawable.evzone)
+                        .error(R.drawable.evzone)
                         .into(this)
-                    layoutParams = LinearLayout.LayoutParams(200, 200)  // Adjust size as needed
+                    layoutParams = LinearLayout.LayoutParams(200, 200)
                 }
                 addView(logoImage)
 
@@ -48,41 +48,47 @@ object LoadingDialog {
                 val companyNameText = TextView(context).apply {
                     val companyText = "EVzone Pay"
                     text = companyText
-                    textSize = 32f // Increase the font size
+                    textSize = 32f
                     gravity = Gravity.CENTER
-                    setTypeface(null, android.graphics.Typeface.BOLD) // Set the text to bold
+                    setTypeface(null, android.graphics.Typeface.BOLD)
 
-                    // Adjust the colors (softer green for "Evzone" and orange for "Pay")
+                    // Apply colored spans
                     val spannableText = SpannableString(companyText)
-                    spannableText.setSpan(ForegroundColorSpan(Color.parseColor("#4CAF50")), 0, 6, 0)  // Softer green
-                    spannableText.setSpan(ForegroundColorSpan(Color.parseColor("#FFA500")), 7, companyText.length, 0)  // Orange for "Pay"
+                    spannableText.setSpan(
+                        ForegroundColorSpan(Color.parseColor("#4CAF50")),
+                        0,
+                        6,
+                        0
+                    ) // Softer green for "EVzone"
+                    spannableText.setSpan(
+                        ForegroundColorSpan(Color.parseColor("#FFA500")),
+                        7,
+                        companyText.length,
+                        0
+                    ) // Orange for "Pay"
                     text = spannableText
+
+                    // Fade-in/fade-out animation
+                    val fadeInOutAnimator = ObjectAnimator.ofFloat(this, "alpha", 0f, 1f, 0f).apply {
+                        duration = 1000
+                        repeatCount = ObjectAnimator.INFINITE
+                        repeatMode = ObjectAnimator.RESTART
+                    }
+                    fadeInOutAnimator.start()
                 }
                 addView(companyNameText)
-
-                // Set up the fade-in fade-out animation for the text (appearing and disappearing)
-                val fadeInOutAnimator = ObjectAnimator.ofFloat(companyNameText, "alpha", 0f, 1f, 0f)
-                fadeInOutAnimator.apply {
-                    duration = 1000  // Duration of one complete fade-in and fade-out cycle
-                    repeatCount = ObjectAnimator.INFINITE  // Repeat the animation infinitely
-                    repeatMode = ObjectAnimator.RESTART  // Restart the fade-in fade-out after each cycle
-                }
-                fadeInOutAnimator.start()  // Start the fade-in and fade-out animation
             }
             setView(loadingLayout)
             setCancelable(false)
-        }.create()
-
-        // Apply fade-in/fade-out animations
-        applyDialogAnimations(loadingDialog)
+        }
 
         loadingDialog.show()
 
-        // Simulate a delay before showing the next dialog
+        // Dismiss after delay and trigger onFinish
         CoroutineScope(Dispatchers.Main).launch {
-            delay(3000) // Delay of 2 seconds before showing the next dialog
-            onFinish()  // Transition to the next dialog
+            delay(3000) // 3-second delay
             loadingDialog.dismiss()
+            onFinish()
         }
     }
 }

@@ -17,7 +17,6 @@ object InsufficientBalanceDialog {
             setPadding(60, 40, 60, 40)
         }
 
-        // Create a FrameLayout for absolute positioning of the close button
         val headerContainer = FrameLayout(context).apply {
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -25,7 +24,6 @@ object InsufficientBalanceDialog {
             )
         }
 
-        // Horizontal header layout (Logo + Title)
         val headerLayout = LinearLayout(context).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
@@ -52,7 +50,6 @@ object InsufficientBalanceDialog {
             gravity = Gravity.CENTER_VERTICAL
         }
 
-        // Close button positioned in the top-right corner
         val closeButton = ImageView(context).apply {
             setImageResource(R.drawable.cancel)
             val size = (24 * context.resources.displayMetrics.density).toInt()
@@ -62,22 +59,17 @@ object InsufficientBalanceDialog {
             }
         }
 
-        // Add views to header layout
         headerLayout.addView(logo)
         headerLayout.addView(title)
-
-        // Add header layout & close button to frame container
         headerContainer.addView(headerLayout)
         headerContainer.addView(closeButton)
 
-        // Warning Icon
         val warningIcon = ImageView(context).apply {
             setImageResource(R.drawable.cross)
             val size = (60 * context.resources.displayMetrics.density).toInt()
             layoutParams = LinearLayout.LayoutParams(size, size)
         }
 
-        // Title Text
         val insufficientTitle = TextView(context).apply {
             text = "Insufficient Funds"
             textSize = 20f
@@ -86,7 +78,6 @@ object InsufficientBalanceDialog {
             setPadding(0, 10, 0, 10)
         }
 
-        // Message Text
         val message = TextView(context).apply {
             text = "The account did not have sufficient funds to cover the transaction amount at the time of the transaction."
             textSize = 16f
@@ -95,39 +86,31 @@ object InsufficientBalanceDialog {
             setPadding(20, 10, 20, 20)
         }
 
-        // Add Funds Button
         val addFundsButton = Button(context).apply {
             text = "Add Funds"
-            setTextColor(context.getColor(R.color.white))  // Set the text color
+            setTextColor(context.getColor(R.color.white))
             textSize = 16f
             setPadding(20, 10, 20, 10)
-
-            // Set the background with rounded corners
             background = GradientDrawable().apply {
                 shape = GradientDrawable.RECTANGLE
-                cornerRadius = 20f  // Adjust this value to control the roundness of the corners
-                setColor(context.getColor(R.color.blue))  // Set the background color
+                cornerRadius = 20f
+                setColor(context.getColor(R.color.blue))
             }
-
-            // Prevent the text from being capitalized
             isAllCaps = false
         }
 
-
-
-        // Add views to the main layout
-        dialogLayout.addView(headerContainer) // Header (with close button)
+        dialogLayout.addView(headerContainer)
         dialogLayout.addView(warningIcon)
         dialogLayout.addView(insufficientTitle)
         dialogLayout.addView(message)
         dialogLayout.addView(addFundsButton)
 
-        val dialog = AlertDialog.Builder(context)
+        // Apply the custom theme with rounded corners and animations
+        val dialog = AlertDialog.Builder(context, R.style.CustomDialogTheme)
             .setView(dialogLayout)
-            .setCancelable(false) // Prevent accidental dismiss
+            .setCancelable(false)
             .create()
 
-        // Set close button functionality after dialog is initialized
         closeButton.setOnClickListener { dialog.dismiss() }
         addFundsButton.setOnClickListener { dialog.dismiss() }
 
