@@ -1,12 +1,9 @@
-package com.example.mathoperation.dialogs
-
+package com.example.mathoperation
 import android.content.Context
 import android.graphics.drawable.GradientDrawable
 import android.view.Gravity
-import android.view.LayoutInflater
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
-import com.example.mathoperation.R
 
 object InsufficientBalanceDialog {
 

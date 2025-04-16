@@ -1,7 +1,5 @@
-package com.example.mathoperation.dialogs
-
+package com.example.mathoperation
 import android.content.Context
-import com.example.mathoperation.LoadingDialog
 
 object Dialogs {
     fun showLoadingDialog(context: Context, onFinish: () -> Unit) {

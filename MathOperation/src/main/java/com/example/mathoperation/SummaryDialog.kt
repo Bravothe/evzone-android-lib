@@ -1,4 +1,4 @@
-package com.example.mathoperation.dialogs
+package com.example.mathoperation
 
 import android.content.Context
 import android.graphics.Color
@@ -12,8 +12,8 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.cardview.widget.CardView
-import com.example.mathoperation.R
 import java.text.DecimalFormat
+import androidx.core.graphics.toColorInt
 
 object SummaryDialog {
 
@@ -41,7 +41,7 @@ object SummaryDialog {
             val valueTextView = TextView(context).apply {
                 text = value
                 textSize = 16f
-                setTextColor(if (isTotal) Color.parseColor("#009900") else Color.BLACK)
+                setTextColor(if (isTotal) "#009900".toColorInt() else Color.BLACK)
                 typeface = if (isTotal) Typeface.DEFAULT_BOLD else Typeface.DEFAULT
                 gravity = Gravity.END
                 layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
@@ -103,7 +103,7 @@ object SummaryDialog {
                         val formattedAmount = DecimalFormat("#,###").format(totalAmount)
                         text = "$currency $formattedAmount"
                         textSize = 24f
-                        setTextColor(Color.parseColor("#009900"))
+                        setTextColor("#009900".toColorInt())
                         typeface = Typeface.DEFAULT_BOLD
                         gravity = Gravity.CENTER
                     }
@@ -143,7 +143,7 @@ object SummaryDialog {
                         background = GradientDrawable().apply {
                             shape = GradientDrawable.RECTANGLE
                             cornerRadius = 20f
-                            setColor(Color.parseColor("#007BFF"))
+                            setColor("#007BFF".toColorInt())
                         }
                         isAllCaps = false
                         layoutParams = LinearLayout.LayoutParams(

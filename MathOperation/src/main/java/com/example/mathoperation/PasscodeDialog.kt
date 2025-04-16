@@ -1,10 +1,11 @@
-package com.example.mathoperation.dialogs
+package com.example.mathoperation
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
+import android.os.Build
 import android.text.InputFilter
 import android.text.InputType
 import android.text.SpannableString
@@ -17,7 +18,7 @@ import android.view.Gravity
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
-import com.example.mathoperation.R
+import androidx.core.graphics.toColorInt
 
 object PasscodeDialog {
     private lateinit var dialog: AlertDialog
@@ -71,7 +72,7 @@ object PasscodeDialog {
             val spannable = SpannableString("Merchant Info:\n$merchantName \n$transactionId \t\t\t\t\t$amount")
             val startMerchantInfo = 0
             val endMerchantInfo = "Merchant Info:".length
-            val softGreen = Color.parseColor("#4CAF50")
+            val softGreen = "#4CAF50".toColorInt()
 
             spannable.setSpan(ForegroundColorSpan(softGreen), startMerchantInfo, endMerchantInfo, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
             spannable.setSpan(StyleSpan(Typeface.BOLD), startMerchantInfo, endMerchantInfo, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
@@ -107,7 +108,7 @@ object PasscodeDialog {
                 setMargins(0, 0, 0, 30)
             }
             background = context.getDrawable(R.drawable.passcode_input_border)
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 elevation = 5f
             }
         }

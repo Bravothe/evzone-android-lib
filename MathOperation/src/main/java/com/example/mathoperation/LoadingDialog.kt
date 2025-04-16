@@ -1,14 +1,9 @@
 package com.example.mathoperation
-
 import android.animation.ObjectAnimator
 import android.content.Context
-import android.graphics.Color
-import android.os.Handler
-import android.os.Looper
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.view.Gravity
-import android.view.LayoutInflater
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -18,6 +13,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import androidx.core.graphics.toColorInt
 
 object LoadingDialog {
 
@@ -64,13 +60,13 @@ object LoadingDialog {
                     // Apply colored spans
                     val spannableText = SpannableString(companyText)
                     spannableText.setSpan(
-                        ForegroundColorSpan(Color.parseColor("#4CAF50")),
+                        ForegroundColorSpan("#4CAF50".toColorInt()),
                         0,
                         6,
                         0
                     ) // Softer green for "EVzone"
                     spannableText.setSpan(
-                        ForegroundColorSpan(Color.parseColor("#FFA500")),
+                        ForegroundColorSpan("#FFA500".toColorInt()),
                         7,
                         companyText.length,
                         0

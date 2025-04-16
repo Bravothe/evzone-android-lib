@@ -1,9 +1,7 @@
 package com.example.mathoperation
 
 import android.content.Context
-import com.example.mathoperation.dialogs.InsufficientBalanceDialog
-import com.example.mathoperation.dialogs.PaymentStatusDialog
-import com.example.mathoperation.dialogs.SummaryDialog
+
 object MathOperations {
 
     // Business logic related to showing different dialogs or calculations

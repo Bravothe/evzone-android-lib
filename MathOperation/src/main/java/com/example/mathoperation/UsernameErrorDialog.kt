@@ -1,4 +1,4 @@
-package com.example.mathoperation.dialogs
+package com.example.mathoperation
 
 import android.app.Dialog
 import android.content.Context
@@ -7,7 +7,6 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
-import com.example.mathoperation.R
 
 object UsernameErrorDialog {
     fun showUsernameErrorDialog(context: Context, onSubmit: (String) -> Unit) {

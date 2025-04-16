@@ -4,9 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.widget.Toast
-import com.example.mathoperation.dialogs.PasscodeDialog
-import com.example.mathoperation.dialogs.SummaryDialog
-import com.example.mathoperation.dialogs.Dialogs
 import kotlinx.coroutines.*
 
 object MathOperation {

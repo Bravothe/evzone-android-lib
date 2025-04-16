@@ -1,4 +1,4 @@
-package com.example.mathoperation.dialogs
+package com.example.mathoperation
 
 import android.content.Context
 import android.graphics.Color
@@ -8,7 +8,7 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
-import com.example.mathoperation.R
+import androidx.core.graphics.toColorInt
 
 object PaymentStatusDialog {
     private const val TAG = "PaymentStatusDialog"
@@ -63,7 +63,7 @@ object PaymentStatusDialog {
                 background = GradientDrawable().apply {
                     shape = GradientDrawable.RECTANGLE
                     cornerRadius = 16f
-                    setColor(if (isSuccess) Color.parseColor("#007BFF") else Color.parseColor("#FF9800"))
+                    setColor(if (isSuccess) "#007BFF".toColorInt() else "#FF9800".toColorInt())
                 }
                 isAllCaps = false
                 layoutParams = LinearLayout.LayoutParams(
