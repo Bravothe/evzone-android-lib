@@ -32,15 +32,24 @@ object LoadingDialog {
             val loadingLayout = LinearLayout(context).apply {
                 orientation = LinearLayout.VERTICAL
                 gravity = Gravity.CENTER
-                setPadding(32, 32, 32, 32) // Add some padding for better spacing
+                setPadding(48, 48, 48, 48) // Increased padding for better spacing
 
-                // Add the company logo
+                // Set the increased height of the dialog (800px)
+                var layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    800  // Increased height for a taller dialog (in pixels)
+                )
+                this.layoutParams = layoutParams
+
+                // Add the company logo with adjusted size and margins
                 val logoImage = ImageView(context).apply {
                     Glide.with(context)
-                        .load(R.drawable.evzone)
-                        .error(R.drawable.evzone)
+                        .load(R.drawable.logo1)
+                        .error(R.drawable.logo1)
                         .into(this)
-                    layoutParams = LinearLayout.LayoutParams(200, 200)
+                    layoutParams = LinearLayout.LayoutParams(100, 100).apply {
+                        setMargins(0, 0, 0, 32) // Add bottom margin for spacing
+                    }
                 }
                 addView(logoImage)
 
@@ -48,7 +57,7 @@ object LoadingDialog {
                 val companyNameText = TextView(context).apply {
                     val companyText = "EVzone Pay"
                     text = companyText
-                    textSize = 32f
+                    textSize = 34f // Slightly larger text for better visibility
                     gravity = Gravity.CENTER
                     setTypeface(null, android.graphics.Typeface.BOLD)
 
@@ -70,7 +79,7 @@ object LoadingDialog {
 
                     // Fade-in/fade-out animation
                     val fadeInOutAnimator = ObjectAnimator.ofFloat(this, "alpha", 0f, 1f, 0f).apply {
-                        duration = 1000
+                        duration = 1200 // Slightly slower animation for smoother effect
                         repeatCount = ObjectAnimator.INFINITE
                         repeatMode = ObjectAnimator.RESTART
                     }

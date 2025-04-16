@@ -16,14 +16,17 @@ object PaymentStatusDialog {
     private fun getDialogHeader(context: Context): LinearLayout {
         return LayoutInflater.from(context).inflate(R.layout.dialog_header, null) as LinearLayout
     }
-
     fun showPaymentStatus(context: Context, isSuccess: Boolean, remainingAttempts: Int) {
         val dialogLayout = LinearLayout(context).apply {
             orientation = LinearLayout.VERTICAL
             gravity = Gravity.CENTER
             setPadding(40, 20, 40, 20)
 
-            addView(getDialogHeader(context))
+            // Set a custom height for the dialog layout
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, // Width is still match_parent
+                (320 * context.resources.displayMetrics.density).toInt() // Adjust the height value here
+            )
 
             val icon = ImageView(context).apply {
                 setImageResource(if (isSuccess) R.drawable.scheck else R.drawable.error)
@@ -86,4 +89,5 @@ object PaymentStatusDialog {
             dialog.show()
         }
     }
+
 }

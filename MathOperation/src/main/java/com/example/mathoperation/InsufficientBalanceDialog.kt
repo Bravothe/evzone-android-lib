@@ -51,7 +51,7 @@ object InsufficientBalanceDialog {
         }
 
         val closeButton = ImageView(context).apply {
-            setImageResource(R.drawable.cancel)
+            setImageResource(R.drawable.gray)
             val size = (24 * context.resources.displayMetrics.density).toInt()
             layoutParams = FrameLayout.LayoutParams(size, size).apply {
                 gravity = Gravity.END or Gravity.TOP

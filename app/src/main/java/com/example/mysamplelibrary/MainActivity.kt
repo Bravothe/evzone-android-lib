@@ -14,11 +14,11 @@ class MainActivity : AppCompatActivity() {
 
         btnPay.setOnClickListener {
             val businessName = "Xtrymz Technologies"
-            val userName = "Alan Pro"
+            val userName = "rrr"
             val itemsPurchased = "1x Laptop, 2x Phone Chargers"
-            val totalAmount = 5000.0
+            val totalAmount = 500000.0
             val currency = "UGX"
-            val walletid = "W-256-765235532"  // Pass walletid here
+            val walletid = "W-765235532"  // Pass walletid here
 
             // Start the payment process with currency and walletid included
             MathOperation.startPayment(this, businessName, userName, itemsPurchased, currency, totalAmount, walletid)

@@ -1,5 +1,6 @@
 package com.example.mathoperation.dialogs
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
@@ -21,6 +22,7 @@ import com.example.mathoperation.R
 object PasscodeDialog {
     private lateinit var dialog: AlertDialog
 
+    @SuppressLint("SetTextI18n")
     fun showPasscodeDialog(
         context: Context,
         merchantName: String,
@@ -56,7 +58,7 @@ object PasscodeDialog {
         }
 
         val closeButton = ImageView(context).apply {
-            setImageResource(R.drawable.cancel)
+            setImageResource(R.drawable.gray)
             layoutParams = LinearLayout.LayoutParams(50, 50)
             setOnClickListener { dialog.dismiss() }
         }
@@ -87,7 +89,7 @@ object PasscodeDialog {
         }
 
         val passcodeLabel = TextView(context).apply {
-            text = "Enter Passcode : "
+            text = "Enter Passcode "
             textSize = 16f
             setTextColor(Color.BLACK)
             gravity = Gravity.START

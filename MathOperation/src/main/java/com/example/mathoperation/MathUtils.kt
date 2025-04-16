@@ -10,7 +10,7 @@ import com.example.mathoperation.dialogs.Dialogs
 import kotlinx.coroutines.*
 
 object MathOperation {
-    var walletBalance: Double = 100.0
+    var walletBalance: Double = 100000.0
     private var passcodeAttempts = 0
     private const val MAX_ATTEMPTS = 3
     const val CORRECT_PASSCODE = 123456
