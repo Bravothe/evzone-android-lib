@@ -12,8 +12,9 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.cardview.widget.CardView
-import java.text.DecimalFormat
 import androidx.core.graphics.toColorInt
+import com.bumptech.glide.Glide
+import java.text.DecimalFormat
 
 object SummaryDialog {
 
@@ -53,8 +54,14 @@ object SummaryDialog {
     }
 
     fun showSummaryDialog(
-        context: Context, businessName: String, userName: String, itemsPurchased: String,
-        currency: String, totalAmount: Double, onNext: (Double) -> Unit
+        context: Context,
+        businessName: String,
+        userName: String,
+        itemsPurchased: String,
+        currency: String,
+        totalAmount: Double,
+        businessLogoUrl: String,
+        onNext: (Double) -> Unit
     ) {
         val dialogLayout = LinearLayout(context).apply {
             orientation = LinearLayout.VERTICAL
@@ -79,8 +86,11 @@ object SummaryDialog {
                     addView(headerLayout)
 
                     val logo = ImageView(context).apply {
-                        setImageResource(R.drawable.anb) // Replace with actual logo if needed
                         layoutParams = LinearLayout.LayoutParams(120, 120)
+                        // Load logo from URL using Glide without anb drawable
+                        Glide.with(context)
+                            .load(businessLogoUrl)
+                            .into(this)
                     }
 
                     val title = TextView(context).apply {

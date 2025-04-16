@@ -24,7 +24,8 @@ object MathOperation {
         itemsPurchased: String,
         currency: String,
         totalAmount: Double,
-        walletid: String
+        walletid: String,
+        businessLogoUrl: String
     ) {
         if (userName.isNullOrEmpty()) {
             // Redirect to EVzone for login
@@ -33,7 +34,7 @@ object MathOperation {
             context.startActivity(intent)
         } else {
             LoadingDialog.showLoadingDialog(context) {
-                showProductSummary(context, businessName, userName, itemsPurchased, currency, totalAmount, walletid)
+                showProductSummary(context, businessName, userName, itemsPurchased, currency, totalAmount, walletid, businessLogoUrl)
             }
         }
     }
@@ -73,14 +74,19 @@ object MathOperation {
         itemsPurchased: String,
         currency: String,
         totalAmount: Double,
-        walletid: String
+        walletid: String,
+        businessLogoUrl: String
     ) {
-        SummaryDialog.showSummaryDialog(context, businessName, userName, itemsPurchased, currency, totalAmount) { amount ->
-            showAmountDeductionDialog(context, amount, walletid, businessName, currency)
+        SummaryDialog.showSummaryDialog(context, businessName, userName, itemsPurchased, currency, totalAmount, businessLogoUrl) { amount ->
+            if (walletBalance >= amount) {
+                showPasscodeDialog(context, amount, walletid, businessName, currency)
+            } else {
+                Dialogs.showInsufficientBalance(context)
+            }
         }
     }
 
-    private fun showAmountDeductionDialog(
+    private fun showPasscodeDialog(
         context: Context,
         amount: Double,
         walletid: String,
@@ -111,12 +117,8 @@ object MathOperation {
     }
 
     private fun processPayment(context: Context, amount: Double) {
-        if (walletBalance >= amount) {
-            walletBalance -= amount
-            Dialogs.showPaymentStatus(context, true)
-        } else {
-            Dialogs.showInsufficientBalance(context)
-        }
+        walletBalance -= amount
+        Dialogs.showPaymentStatus(context, true)
     }
 
     private fun isPasscodeCorrect(passcode: String): Boolean {

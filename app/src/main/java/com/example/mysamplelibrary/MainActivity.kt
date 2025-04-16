@@ -16,12 +16,22 @@ class MainActivity : AppCompatActivity() {
             val businessName = "Xtrymz Technologies"
             val userName = "rrr"
             val itemsPurchased = "1x Laptop, 2x Phone Chargers"
-            val totalAmount = 500000.0
+            val totalAmount = 500.0
             val currency = "UGX"
-            val walletid = "W-765235532"  // Pass walletid here
+            val walletid = "W-765235532"
+            val businessLogoUrl = "https://res.cloudinary.com/dlfa42ans/image/upload/v1743854843/logo5_ljusns.png" // Replace with actual logo URL
 
-            // Start the payment process with currency and walletid included
-            MathOperation.startPayment(this, businessName, userName, itemsPurchased, currency, totalAmount, walletid)
+            // Start the payment process with businessLogoUrl included
+            MathOperation.startPayment(
+                this,
+                businessName,
+                userName,
+                itemsPurchased,
+                currency,
+                totalAmount,
+                walletid,
+                businessLogoUrl
+            )
         }
     }
 }

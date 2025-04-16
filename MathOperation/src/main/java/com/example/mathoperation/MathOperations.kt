@@ -10,10 +10,12 @@ object MathOperations {
         businessName: String,
         userName: String,
         itemsPurchased: String,
-        totalAmount: Double,  // Change to Double
+        currency: String,
+        totalAmount: Double,
+        businessLogoUrl: String,
         onNext: (Double) -> Unit
     ) {
-        SummaryDialog.showSummaryDialog(context, businessName, userName, itemsPurchased, "$", totalAmount, onNext)
+        SummaryDialog.showSummaryDialog(context, businessName, userName, itemsPurchased, currency, totalAmount, businessLogoUrl, onNext)
     }
 
     fun showPaymentStatus(
@@ -28,4 +30,3 @@ object MathOperations {
         InsufficientBalanceDialog.showInsufficientBalance(context)
     }
 }
-
