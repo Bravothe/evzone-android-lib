@@ -15,6 +15,8 @@ import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
 import android.util.TypedValue
 import android.view.Gravity
+import android.view.View
+import android.view.animation.AnimationUtils
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
@@ -39,6 +41,7 @@ object PasscodeDialog {
             setBackgroundColor(Color.WHITE)
         }
 
+        // Header Layout
         val headerLayout = LinearLayout(context).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
@@ -68,6 +71,72 @@ object PasscodeDialog {
         headerLayout.addView(title)
         headerLayout.addView(closeButton)
 
+        // Dark Blue Clickable Section
+        val darkBlueSection = LinearLayout(context).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(20, 20, 20, 20)
+            background = GradientDrawable().apply {
+                shape = GradientDrawable.RECTANGLE
+                cornerRadius = 20f
+                setColor("#0058FF".toColorInt())
+            }
+        }
+
+        val amountUsdText = TextView(context).apply {
+            text = "THE RECEIVER ACCEPTS MONEY IN USD YOU ARE ABOUT TO SEND AN EQUIVALENT OF USD 5"
+            textSize = 14f
+            setTextColor(Color.WHITE)
+            gravity = Gravity.CENTER
+            setPadding(0, 0, 0, 10)
+        }
+
+        darkBlueSection.addView(amountUsdText)
+
+        // Toggleable Light Blue Section (Rate Info)
+        val rateInfoSection = LinearLayout(context).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(20, 20, 20, 20)
+            background = GradientDrawable().apply {
+                shape = GradientDrawable.RECTANGLE
+                cornerRadius = 20f
+                setColor("#D9EFFF".toColorInt())
+            }
+            visibility = View.GONE // Initially hidden
+        }
+
+        val rateText = TextView(context).apply {
+            text = "Rate: UGX 1 = USD 0.000027\nAMOUNT REQUIRED: UGX 1000"
+            textSize = 14f
+            setTextColor(Color.BLACK)
+            gravity = Gravity.CENTER
+        }
+
+        val noteText = TextView(context).apply {
+            text = "(Please note: current rates and charges apply)"
+            textSize = 12f
+            setTextColor(Color.RED)
+            gravity = Gravity.CENTER
+            setPadding(0, 10, 0, 0)
+        }
+
+        rateInfoSection.addView(rateText)
+        rateInfoSection.addView(noteText)
+
+        // Toggle Animation for Rate Info Section
+        val slideDown = AnimationUtils.loadAnimation(context, android.R.anim.slide_in_left)
+        val slideUp = AnimationUtils.loadAnimation(context, android.R.anim.slide_out_right)
+
+        darkBlueSection.setOnClickListener {
+            if (rateInfoSection.visibility == View.GONE) {
+                rateInfoSection.visibility = View.VISIBLE
+                rateInfoSection.startAnimation(slideDown)
+            } else {
+                rateInfoSection.startAnimation(slideUp)
+                rateInfoSection.visibility = View.GONE
+            }
+        }
+
+        // Merchant Info
         val merchantText = TextView(context).apply {
             val spannable = SpannableString("Merchant Info:\n$merchantName \n$transactionId \t\t\t\t\t$amount")
             val startMerchantInfo = 0
@@ -89,6 +158,7 @@ object PasscodeDialog {
             setPadding(0, 0, 50, 0)
         }
 
+        // Passcode Input
         val passcodeLabel = TextView(context).apply {
             text = "Enter Passcode "
             textSize = 16f
@@ -145,19 +215,34 @@ object PasscodeDialog {
         passcodeLayout.addView(passcodeInput)
         passcodeLayout.addView(toggleVisibility)
 
-        val infoBox = TextView(context).apply {
-            text = "You are making a payment to $merchantName.\nAmount UGX $amount will be deducted from your wallet, including $tax tax and $walletFee wallet fee."
-            textSize = 14f
-            setTextColor(Color.BLACK)
+        // Transaction Description (Light Blue Background, Always Visible)
+        val transactionDescriptionSection = LinearLayout(context).apply {
+            orientation = LinearLayout.HORIZONTAL
             setPadding(20, 20, 20, 20)
-            gravity = Gravity.CENTER
+            gravity = Gravity.CENTER_VERTICAL
             background = GradientDrawable().apply {
                 shape = GradientDrawable.RECTANGLE
                 cornerRadius = 20f
-                setColor(Color.parseColor("#D9EFFF"))
+                setColor("#D9EFFF".toColorInt())
             }
         }
 
+        val infoIcon = ImageView(context).apply {
+            setImageResource(R.drawable.ic) // Add ic_info drawable (blue circle with white "i")
+            layoutParams = LinearLayout.LayoutParams(40, 40)
+            setPadding(0, 0, 10, 0)
+        }
+
+        val transactionDescription = TextView(context).apply {
+            text = "You are making a payment to $merchantName.\nAmount UGX $amount will be deducted from your wallet, including $tax tax and $walletFee wallet fee."
+            textSize = 14f
+            setTextColor(Color.BLACK)
+        }
+
+        transactionDescriptionSection.addView(infoIcon)
+        transactionDescriptionSection.addView(transactionDescription)
+
+        // Buttons
         val buttonsLayout = LinearLayout(context).apply {
             orientation = LinearLayout.VERTICAL
             setPadding(0, 20, 0, 0)
@@ -198,11 +283,14 @@ object PasscodeDialog {
         buttonsLayout.addView(confirmButton)
         buttonsLayout.addView(backButton)
 
+        // Add all views to the main layout in the correct order
         layout.addView(headerLayout)
+        layout.addView(darkBlueSection)
+        layout.addView(rateInfoSection)
         layout.addView(merchantText)
         layout.addView(passcodeLabel)
         layout.addView(passcodeLayout)
-        layout.addView(infoBox)
+        layout.addView(transactionDescriptionSection)
         layout.addView(buttonsLayout)
 
         // Apply the custom theme with rounded corners and animations
